@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'MapScreen.dart';
+import 'ProfileScreen.dart';
+import 'CarList.dart';
 
 void main() {
   runApp(const MyApp());
@@ -32,40 +34,47 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  void _addCar() {
-    // Logic to add a new car
+  int _selectedIndex = 0;  // Current index for the bottom nav bar
+
+  // Replace with actual screens
+  late final List<Widget> _widgetOptions = <Widget>[
+    const CarList(), // Your existing cars list screen
+    const MapScreen(), // Your map screen or any other screen
+    const ProfileScreen(), // Your profile screen or any other screen
+  ];
+
+  
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
+      body: Center(
+        child: _widgetOptions.elementAt(_selectedIndex),
       ),
-      body: ListView.builder(
-        itemCount: 10, // Number of available cars
-        itemBuilder: (context, index) {
-          return ListTile(
-            leading: Icon(Icons.directions_car),
-            title: Text('Car $index'), // Replace with actual car name
-            subtitle:
-                Text('Location, Availability'), // Replace with actual details
-            trailing: ElevatedButton(
-              onPressed: () {}, // Logic to book or view car
-              child: Text('Book'),
-            ),
-          );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const MapScreen()),
-          );
-        },
-        tooltip: 'Add Car',
-        child: const Icon(Icons.car_rental),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.directions_car),
+            label: 'Cars',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.map),
+            label: 'Map',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.blue,
+        onTap: _onItemTapped,
       ),
     );
   }
