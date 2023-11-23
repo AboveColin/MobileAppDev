@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'Dashboard.dart';
 
 import 'MapScreen.dart';
 import 'ProfileScreen.dart';
@@ -38,6 +39,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   // Replace with actual screens
   late final List<Widget> _widgetOptions = <Widget>[
+    const DashboardScreen(),
     const CarList(), // Your existing cars list screen
     const MapScreen(), // Your map screen or any other screen
     const ProfileScreen(), // Your profile screen or any other screen
@@ -45,11 +47,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,24 +54,32 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
+      bottomNavigationBar: NavigationBar(
+        destinations: const <Widget>[
+          NavigationDestination(
+            icon: Icon(Icons.dashboard),
+            label: 'Dashboard',
+          ),
+          NavigationDestination(
             icon: Icon(Icons.directions_car),
             label: 'Cars',
           ),
-          BottomNavigationBarItem(
+          NavigationDestination(
             icon: Icon(Icons.map),
             label: 'Map',
           ),
-          BottomNavigationBarItem(
+          NavigationDestination(
             icon: Icon(Icons.person),
             label: 'Profile',
           ),
         ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue,
-        onTap: _onItemTapped,
+        selectedIndex: _selectedIndex,
+        indicatorColor: Colors.amber[800],
+        onDestinationSelected: (int index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
       ),
     );
   }
