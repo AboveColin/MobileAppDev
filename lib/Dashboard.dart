@@ -6,13 +6,14 @@ class DashboardScreen extends StatelessWidget {
   const DashboardScreen({Key? key}) : super(key: key);
 
   Future<Map<String, dynamic>> fetchDashboardData() async {
-    var url = Uri.parse('http://192.168.178.2:8000/getdashboard');
+    var url = Uri.parse('https://automaat.cdevries.dev/getdashboard');
     try {
       var response = await http.get(url);
 
       if (response.statusCode == 200) {
         var jsonData = json.decode(response.body);
-        return jsonData['Dashboard']; // Assuming 'Dashboard' is the key in the JSON response
+        return jsonData[
+            'Dashboard']; // Assuming 'Dashboard' is the key in the JSON response
       } else {
         print('Failed to load data');
         throw Exception('Failed to load data');
@@ -32,7 +33,8 @@ class DashboardScreen extends StatelessWidget {
       body: FutureBuilder<Map<String, dynamic>>(
         future: fetchDashboardData(),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
+          if (snapshot.connectionState == ConnectionState.done &&
+              snapshot.hasData) {
             var data = snapshot.data!;
             var totalCustomers = data['Costumers'][0][0];
             var carsAvailable = data['Cars'][0][0];
@@ -46,7 +48,8 @@ class DashboardScreen extends StatelessWidget {
                     padding: const EdgeInsets.all(16.0),
                     child: const Text(
                       'Overview',
-                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                     ),
                   ),
                   Card(

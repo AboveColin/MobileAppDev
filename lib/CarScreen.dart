@@ -8,7 +8,7 @@ class CarScreen extends StatelessWidget {
   final int id;
 
   Future<Map<String, dynamic>> fetchData(int id) async {
-    var url = Uri.parse('http://192.168.178.2:8000/getCar/$id');
+    var url = Uri.parse('https://automaat.cdevries.dev/getCar/$id');
     try {
       var response = await http.get(url);
 
@@ -34,19 +34,26 @@ class CarScreen extends StatelessWidget {
       body: FutureBuilder<Map<String, dynamic>>(
         future: fetchData(id),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
-            var carData = snapshot.data!['Car'][0]; // Adjust based on your API response
+          if (snapshot.connectionState == ConnectionState.done &&
+              snapshot.hasData) {
+            var carData =
+                snapshot.data!['Car'][0]; // Adjust based on your API response
             return ListView(
               padding: const EdgeInsets.all(16),
               children: [
                 carData[10] != null
-                  ? Image.network(carData[10], fit: BoxFit.cover)
-                  : SizedBox(height: 200, child: Center(child: Text('No image available'))),
+                    ? Image.network(carData[10], fit: BoxFit.cover)
+                    : SizedBox(
+                        height: 200,
+                        child: Center(child: Text('No image available'))),
                 SizedBox(height: 10),
-                buildDetailRow(Icons.confirmation_number, 'License Plate:', '${carData[0]}'),
-                buildDetailRow(Icons.branding_watermark, 'Brand:', '${carData[2]}'),
+                buildDetailRow(Icons.confirmation_number, 'License Plate:',
+                    '${carData[0]}'),
+                buildDetailRow(
+                    Icons.branding_watermark, 'Brand:', '${carData[2]}'),
                 buildDetailRow(Icons.directions_car, 'Model:', '${carData[3]}'),
-                buildDetailRow(Icons.local_gas_station, 'Fuel type:', '${carData[4]}'),
+                buildDetailRow(
+                    Icons.local_gas_station, 'Fuel type:', '${carData[4]}'),
                 buildDetailRow(Icons.calendar_today, 'Year:', '${carData[7]}'),
                 buildDetailRow(Icons.category, 'Type:', '${carData[9]}'),
               ],
@@ -60,20 +67,22 @@ class CarScreen extends StatelessWidget {
       ),
     );
   }
-  
-Widget buildDetailRow(IconData icon, String title, String value) {
+
+  Widget buildDetailRow(IconData icon, String title, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-            Icon(icon, color: Colors.blue),
+          Icon(icon, color: Colors.blue),
           SizedBox(width: 8),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                Text(title,
+                    style:
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 Text(value, style: TextStyle(fontSize: 16)),
               ],
             ),

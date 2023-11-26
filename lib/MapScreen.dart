@@ -25,7 +25,7 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   Future<List<dynamic>> fetchRentals() async {
-    var url = Uri.parse('http://192.168.178.2:8000/getRentals'); // Update this URL as needed
+    var url = Uri.parse('https://automaat.cdevries.dev/getRentals'); // Update this URL as needed
     try {
       var response = await http.get(url);
 
