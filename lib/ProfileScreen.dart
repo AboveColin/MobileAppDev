@@ -1,14 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:mobileappdev/SettingsScreen.dart';
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  final Function(bool) onThemeChanged;
+
+  const ProfileScreen({Key? key, required this.onThemeChanged})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile'),
-        backgroundColor: Colors.white,
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () {
+              // Navigate to the settings screen
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      SettingsScreen(onThemeChanged: onThemeChanged),
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: Center(
         child: Column(
