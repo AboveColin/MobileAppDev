@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'CarScreen.dart';
+import 'helpers/ApiService.dart'; // Import ApiService
 
 class MapScreen extends StatefulWidget {
   const MapScreen({Key? key}) : super(key: key);
@@ -15,46 +14,33 @@ class MapScreen extends StatefulWidget {
 class _MapScreenState extends State<MapScreen> {
   late MapController mapController;
   late Future<List<dynamic>> rentalsFuture;
+  final ApiService _apiService =
+      ApiService(); // Create an instance of ApiService
 
   @override
   void initState() {
     super.initState();
     mapController = MapController();
-    rentalsFuture = fetchRentals();
-    // Possibly initialize a listener for map movements here
-  }
-
-  Future<List<dynamic>> fetchRentals() async {
-    var url = Uri.parse('https://automaat.cdevries.dev/getRentals'); // Update this URL as needed
-    try {
-      var response = await http.get(url);
-
-      if (response.statusCode == 200) {
-        var jsonData = json.decode(response.body);
-        return jsonData['Rentals']; // Assuming 'Rentals' is the key in the JSON response
-      } else {
-        print('Failed to load data');
-        throw Exception('Failed to load data');
-      }
-    } catch (e) {
-      print('Error: $e');
-      throw Exception('Failed to load data');
-    }
+    rentalsFuture =
+        _apiService.fetchRentals(); // Use fetchRentals from ApiService
   }
 
   void refreshRentals() {
     setState(() {
-      rentalsFuture = fetchRentals();
+      rentalsFuture =
+          _apiService.fetchRentals(); // Reset the future to reload data
     });
   }
 
   List<Marker> createMarkers(List rentals, BuildContext context) {
     return List.generate(rentals.length, (index) {
-      
       var rental = rentals[index];
       print(rentals);
       return Marker(
-        point: LatLng(rental[1], rental[2]), // Assuming indexes 1 and 2 are latitude and longitude
+        point: LatLng(
+            rental['longitude'],
+            rental[
+                'latitude']), // Assuming indexes 1 and 2 are latitude and longitude
         width: 80,
         height: 80,
         child: IconButton(
@@ -64,8 +50,9 @@ class _MapScreenState extends State<MapScreen> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => CarScreen(id: rental[7]), // Assuming index 6 is the ID or unique identifier
-                
+                builder: (context) => CarScreen(
+                    id: rental[
+                        'carID']), // Assuming index 6 is the ID or unique identifier
               ),
             );
           },
@@ -83,7 +70,8 @@ class _MapScreenState extends State<MapScreen> {
       body: FutureBuilder<List<dynamic>>(
         future: rentalsFuture,
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
+          if (snapshot.connectionState == ConnectionState.done &&
+              snapshot.hasData) {
             var markers = createMarkers(snapshot.data!, context);
             return FlutterMap(
               mapController: mapController,
@@ -94,12 +82,11 @@ class _MapScreenState extends State<MapScreen> {
               children: [
                 TileLayer(
                   urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                  userAgentPackageName: 'com.yourcompany.yourapp',
+                  userAgentPackageName: 'nl.nikColin.MobileAppDev',
                 ),
                 MarkerLayer(markers: markers),
               ],
             );
-      
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else {

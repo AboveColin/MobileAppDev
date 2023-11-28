@@ -1,28 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'helpers/ApiService.dart'; // Import ApiService
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class DashboardScreen extends StatelessWidget {
-  const DashboardScreen({Key? key}) : super(key: key);
+  DashboardScreen({Key? key}) : super(key: key); // Removed 'const'
 
-  Future<Map<String, dynamic>> fetchDashboardData() async {
-    var url = Uri.parse('https://automaat.cdevries.dev/getdashboard');
-    try {
-      var response = await http.get(url);
-
-      if (response.statusCode == 200) {
-        var jsonData = json.decode(response.body);
-        return jsonData[
-            'Dashboard']; // Assuming 'Dashboard' is the key in the JSON response
-      } else {
-        print('Failed to load data');
-        throw Exception('Failed to load data');
-      }
-    } catch (e) {
-      print('Error: $e');
-      throw Exception('Failed to load data');
-    }
-  }
+  final ApiService _apiService =
+      ApiService(); // Create an instance of ApiService
 
   @override
   Widget build(BuildContext context) {
@@ -31,22 +15,24 @@ class DashboardScreen extends StatelessWidget {
         title: const Text('Dashboard'),
       ),
       body: FutureBuilder<Map<String, dynamic>>(
-        future: fetchDashboardData(),
+        future: _apiService
+            .fetchDashboardData(), // Use fetchDashboardData from ApiService
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done &&
               snapshot.hasData) {
             var data = snapshot.data!;
-            var totalCustomers = data['Costumers'][0][0];
-            var carsAvailable = data['Cars'][0][0];
-            var activeRentals = data['Rentals'][0][0];
+
+            var totalCustomers = data['Costumers'][0]['costumers'];
+            var carsAvailable = data['Cars'][0]['cars'];
+            var activeRentals = data['Rentals'][0]['rentals'];
 
             return SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: const Text(
+                  const Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Text(
                       'Overview',
                       style:
                           TextStyle(fontSize: 22, fontWeight: FontWeight.bold),

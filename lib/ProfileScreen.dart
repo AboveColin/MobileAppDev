@@ -1,11 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:mobileappdev/SettingsScreen.dart';
+import 'StartScreen.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   final Function(bool) onThemeChanged;
 
-  const ProfileScreen({Key? key, required this.onThemeChanged})
-      : super(key: key);
+  ProfileScreen({Key? key, required this.onThemeChanged}) : super(key: key);
+
+  @override
+  _ProfileScreenState createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  final storage = FlutterSecureStorage();
+  String? token;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadToken();
+  }
+
+  Future<void> _loadToken() async {
+    String? storedToken = await storage.read(key: 'token');
+    setState(() {
+      token = storedToken;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +43,7 @@ class ProfileScreen extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) =>
-                      SettingsScreen(onThemeChanged: onThemeChanged),
+                      SettingsScreen(onThemeChanged: widget.onThemeChanged),
                 ),
               );
             },
@@ -54,6 +76,14 @@ class ProfileScreen extends StatelessWidget {
                 color: Colors.grey,
               ),
             ),
+            const SizedBox(height: 4),
+            Text(
+              'Token: ${token ?? "Loading..."}',
+              style: const TextStyle(
+                fontSize: 18,
+                color: Colors.grey,
+              ),
+            ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
@@ -63,8 +93,15 @@ class ProfileScreen extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 // Add logout functionality
+                await storage.delete(key: 'token');
+
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => StartScreen()),
+                  (Route<dynamic> route) => false,
+                );
               },
               style: ElevatedButton.styleFrom(
                 primary: Colors.red, // background (button) color

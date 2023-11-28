@@ -1,61 +1,48 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'helpers/ApiService.dart'; // Import ApiService
 
 class CarScreen extends StatelessWidget {
-  const CarScreen({Key? key, required this.id}) : super(key: key);
+  CarScreen({Key? key, required this.id}) : super(key: key); // Removed 'const'
 
   final int id;
-
-  Future<Map<String, dynamic>> fetchData(int id) async {
-    var url = Uri.parse('https://automaat.cdevries.dev/getCar/$id');
-    try {
-      var response = await http.get(url);
-
-      if (response.statusCode == 200) {
-        var jsonData = json.decode(response.body);
-        return jsonData; // Assuming the JSON response contains the car details directly
-      } else {
-        print('Failed to load data');
-        throw Exception('Failed to load data');
-      }
-    } catch (e) {
-      print('Error: $e');
-      throw Exception('Failed to load data');
-    }
-  }
+  final ApiService _apiService =
+      ApiService(); // Create an instance of ApiService
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Car Details'),
+        title: const Text('Car Details'),
       ),
       body: FutureBuilder<Map<String, dynamic>>(
-        future: fetchData(id),
+        future: _apiService.fetchCar(id), // Use fetchCar from ApiService
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done &&
               snapshot.hasData) {
-            var carData =
-                snapshot.data!['Car'][0]; // Adjust based on your API response
+            var carData = snapshot.data!['Car'][0];
+            print(carData['image']);
             return ListView(
               padding: const EdgeInsets.all(16),
               children: [
                 carData[10] != null
-                    ? Image.network(carData[10], fit: BoxFit.cover)
-                    : SizedBox(
+                    ? Hero(
+                        tag: carData['image'],
+                        child: Image.network(carData['image']))
+                    : const SizedBox(
                         height: 200,
                         child: Center(child: Text('No image available'))),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 buildDetailRow(Icons.confirmation_number, 'License Plate:',
-                    '${carData[0]}'),
+                    '${carData["licensePlate"]}'),
                 buildDetailRow(
-                    Icons.branding_watermark, 'Brand:', '${carData[2]}'),
-                buildDetailRow(Icons.directions_car, 'Model:', '${carData[3]}'),
+                    Icons.branding_watermark, 'Brand:', '${carData["brand"]}'),
                 buildDetailRow(
-                    Icons.local_gas_station, 'Fuel type:', '${carData[4]}'),
-                buildDetailRow(Icons.calendar_today, 'Year:', '${carData[7]}'),
-                buildDetailRow(Icons.category, 'Type:', '${carData[9]}'),
+                    Icons.directions_car, 'Model:', '${carData["model"]}'),
+                buildDetailRow(Icons.local_gas_station, 'Fuel type:',
+                    '${carData["fuel"]}'),
+                buildDetailRow(
+                    Icons.calendar_today, 'Year:', '${carData["modelYear"]}'),
+                buildDetailRow(Icons.category, 'Type:', '${carData["body"]}'),
               ],
             );
           } else if (snapshot.hasError) {
@@ -75,15 +62,15 @@ class CarScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Icon(icon, color: Colors.blue),
-          SizedBox(width: 8),
+          const SizedBox(width: 8),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(title,
-                    style:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                Text(value, style: TextStyle(fontSize: 16)),
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold)),
+                Text(value, style: const TextStyle(fontSize: 16)),
               ],
             ),
           ),
