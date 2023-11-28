@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobileappdev/SettingsScreen.dart';
 import 'StartScreen.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:mobileappdev/helpers/StorageHelper.dart';
 
 class ProfileScreen extends StatefulWidget {
   final Function(bool) onThemeChanged;
@@ -13,7 +13,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  final storage = FlutterSecureStorage();
+  final storageHelper = StorageHelper();
   String? token;
 
   @override
@@ -23,7 +23,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _loadToken() async {
-    String? storedToken = await storage.read(key: 'token');
+    String? storedToken = await storageHelper.getToken();
     setState(() {
       token = storedToken;
     });
@@ -95,7 +95,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ElevatedButton(
               onPressed: () async {
                 // Add logout functionality
-                await storage.delete(key: 'token');
+                await storageHelper.deleteToken();
 
                 Navigator.pushAndRemoveUntil(
                   context,

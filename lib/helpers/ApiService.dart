@@ -1,10 +1,22 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:mobileappdev/helpers/StorageHelper.dart'; // Import StorageHelper
 
 class ApiService {
   final String baseUrl = "https://automaat.cdevries.dev";
-  final storage = FlutterSecureStorage();
+  final StorageHelper storageHelper = StorageHelper();
+
+  // Method to get the Authorization header
+  Future<Map<String, String>> _getHeaders() async {
+    String? token = await storageHelper.getToken();
+    if (token != null) {
+      return {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token', // Include the token here
+      };
+    }
+    return {'Content-Type': 'application/json'};
+  }
 
   Future<bool> loginUser(
       {required String email, required String password}) async {
@@ -23,16 +35,18 @@ class ApiService {
 
       if (response.statusCode == 200) {
         var jsonData = json.decode(response.body);
-        await storage.write(
-            key: 'token', value: jsonData['token']); // Store the token
+        print(jsonData);
+        await storageHelper
+            .saveToken(jsonData['access_token']); // Use StorageHelper
         return true;
       } else {
-        print(response.body);
-        print('Login failed');
+        // You can handle different status codes differently here
+        print('Login failed with status code: ${response.statusCode}');
+        print('Response body: ${response.body}');
         return false;
       }
     } catch (e) {
-      print('Error: $e');
+      print('Error during login: $e');
       return false;
     }
   }
@@ -63,8 +77,8 @@ class ApiService {
 
       if (response.statusCode == 200) {
         var jsonData = json.decode(response.body);
-        await storage.write(
-            key: 'token', value: jsonData['token']); // Store the token
+
+        await storageHelper.saveToken(jsonData['access_token']);
         return true;
       } else {
         print('Registration failed');
@@ -77,10 +91,12 @@ class ApiService {
     }
   }
 
+  // Modify the fetch methods to use the headers
   Future<Map<String, dynamic>> fetchDashboardData() async {
     var url = Uri.parse('$baseUrl/getdashboard');
     try {
-      var response = await http.get(url);
+      var headers = await _getHeaders();
+      var response = await http.get(url, headers: headers);
 
       if (response.statusCode == 200) {
         var jsonData = json.decode(response.body);
@@ -96,10 +112,12 @@ class ApiService {
     }
   }
 
+  // Similar modifications for other fetch methods
   Future<List<dynamic>> fetchRentals() async {
-    var url = Uri.parse('$baseUrl/getRentals'); // Update this URL as needed
+    var url = Uri.parse('$baseUrl/getRentals');
     try {
-      var response = await http.get(url);
+      var headers = await _getHeaders();
+      var response = await http.get(url, headers: headers);
 
       if (response.statusCode == 200) {
         var jsonData = json.decode(response.body);
