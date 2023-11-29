@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'helpers/ApiService.dart'; // Import ApiService
 
 class CarScreen extends StatelessWidget {
-  CarScreen({Key? key, required this.id}) : super(key: key); // Removed 'const'
+  CarScreen({Key? key, required this.id}) : super(key: key);
 
   final int id;
-  final ApiService _apiService =
-      ApiService(); // Create an instance of ApiService
+  final ApiService _apiService = ApiService();
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +14,7 @@ class CarScreen extends StatelessWidget {
         title: const Text('Car Details'),
       ),
       body: FutureBuilder<Map<String, dynamic>>(
-        future: _apiService.fetchCar(id), // Use fetchCar from ApiService
+        future: _apiService.fetchCar(id),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done &&
               snapshot.hasData) {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobileappdev/SettingsScreen.dart';
 import 'StartScreen.dart';
+import 'package:mobileappdev/helpers/ApiService.dart';
 import 'package:mobileappdev/helpers/StorageHelper.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -13,19 +14,21 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  final storageHelper = StorageHelper();
-  String? token;
+  final ApiService _apiService = ApiService();
+  final StorageHelper storageHelper = StorageHelper();
+  Map<String, dynamic> customerData = {};
 
   @override
   void initState() {
     super.initState();
-    _loadToken();
+    _fetchCustomerData();
   }
 
-  Future<void> _loadToken() async {
-    String? storedToken = await storageHelper.getToken();
+  Future<void> _fetchCustomerData() async {
+    // Replace with your logic to get the customer ID
+    Map<String, dynamic> data = await _apiService.fetchCustomer();
     setState(() {
-      token = storedToken;
+      customerData = data;
     });
   }
 
@@ -38,7 +41,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () {
-              // Navigate to the settings screen
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -61,24 +63,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
               backgroundImage: NetworkImage('https://picsum.photos/200'),
             ),
             const SizedBox(height: 10),
-            const Text(
-              'Username',
-              style: TextStyle(
+            Text(
+              'Username: ${customerData['username'] ?? "Loading..."}',
+              style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 4),
-            const Text(
-              'User Email',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.grey,
-              ),
-            ),
-            const SizedBox(height: 4),
             Text(
-              'Token: ${token ?? "Loading..."}',
+              'Email: ${customerData['email'] ?? "Loading..."}',
               style: const TextStyle(
                 fontSize: 18,
                 color: Colors.grey,
@@ -94,9 +88,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const SizedBox(height: 10),
             ElevatedButton(
               onPressed: () async {
-                // Add logout functionality
                 await storageHelper.deleteToken();
-
                 Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(builder: (context) => StartScreen()),
@@ -104,7 +96,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 );
               },
               style: ElevatedButton.styleFrom(
-                primary: Colors.red, // background (button) color
+                primary: Colors.red,
               ),
               child: const Text('Logout'),
             ),

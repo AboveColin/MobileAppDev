@@ -19,8 +19,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _selectedIndex = 0; // Current index for the bottom nav bar
-  bool _darkMode = false; // Current dark mode setting
+  int _selectedIndex = 0;
+  bool _darkMode = false;
 
   @override
   void initState() {
@@ -45,7 +45,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // Use Theme.of(context) to access the current theme data
     var themeData = Theme.of(context);
 
     return Scaffold(

@@ -5,8 +5,6 @@ class PreferencesService {
     final preferences = await SharedPreferences.getInstance();
 
     await preferences.setBool('darkMode', settings.darkMode);
-
-    // Add other settings to save as needed
   }
 
   Future<Settings> getSettings() async {

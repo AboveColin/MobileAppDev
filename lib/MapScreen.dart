@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'CarScreen.dart';
-import 'helpers/ApiService.dart'; // Import ApiService
+import 'helpers/ApiService.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({Key? key}) : super(key: key);
@@ -14,21 +14,18 @@ class MapScreen extends StatefulWidget {
 class _MapScreenState extends State<MapScreen> {
   late MapController mapController;
   late Future<List<dynamic>> rentalsFuture;
-  final ApiService _apiService =
-      ApiService(); // Create an instance of ApiService
+  final ApiService _apiService = ApiService();
 
   @override
   void initState() {
     super.initState();
     mapController = MapController();
-    rentalsFuture =
-        _apiService.fetchRentals(); // Use fetchRentals from ApiService
+    rentalsFuture = _apiService.fetchRentals();
   }
 
   void refreshRentals() {
     setState(() {
-      rentalsFuture =
-          _apiService.fetchRentals(); // Reset the future to reload data
+      rentalsFuture = _apiService.fetchRentals();
     });
   }
 
@@ -37,10 +34,7 @@ class _MapScreenState extends State<MapScreen> {
       var rental = rentals[index];
       print(rentals);
       return Marker(
-        point: LatLng(
-            rental['longitude'],
-            rental[
-                'latitude']), // Assuming indexes 1 and 2 are latitude and longitude
+        point: LatLng(rental['longitude'], rental['latitude']),
         width: 80,
         height: 80,
         child: IconButton(
@@ -50,9 +44,7 @@ class _MapScreenState extends State<MapScreen> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => CarScreen(
-                    id: rental[
-                        'carID']), // Assuming index 6 is the ID or unique identifier
+                builder: (context) => CarScreen(id: rental['carID']),
               ),
             );
           },

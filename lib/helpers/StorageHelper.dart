@@ -14,6 +14,4 @@ class StorageHelper {
   Future<void> deleteToken() async {
     await _storage.delete(key: 'token');
   }
-
-  // Add other relevant methods for handling secure storage here
 }

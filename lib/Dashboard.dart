@@ -3,10 +3,9 @@ import 'helpers/ApiService.dart'; // Import ApiService
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class DashboardScreen extends StatelessWidget {
-  DashboardScreen({Key? key}) : super(key: key); // Removed 'const'
+  DashboardScreen({Key? key}) : super(key: key);
 
-  final ApiService _apiService =
-      ApiService(); // Create an instance of ApiService
+  final ApiService _apiService = ApiService();
 
   @override
   Widget build(BuildContext context) {
@@ -15,8 +14,7 @@ class DashboardScreen extends StatelessWidget {
         title: const Text('Dashboard'),
       ),
       body: FutureBuilder<Map<String, dynamic>>(
-        future: _apiService
-            .fetchDashboardData(), // Use fetchDashboardData from ApiService
+        future: _apiService.fetchDashboardData(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done &&
               snapshot.hasData) {
@@ -62,7 +60,6 @@ class DashboardScreen extends StatelessWidget {
                       leading: const Icon(Icons.car_rental),
                     ),
                   ),
-                  // Add more cards for other data points
                 ],
               ),
             );

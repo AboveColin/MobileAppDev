@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animator/flutter_animator.dart'; // Add this package for animations
 import 'package:mobileappdev/HomeScreen.dart';
 import 'package:mobileappdev/helpers/ApiService.dart';
-
 import '../helpers/shared_preferences.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -87,9 +87,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    const primaryColor =
-        Color(0xFF6C63FF); // Example color - replace with your own
-    const secondaryColor = Color(0xFFF5F6FA);
+    const primaryColor = Color(0xFF6C63FF); // Example primary color
+    const secondaryColor = Color(0xFFF5F6FA); // Example secondary color
 
     const inputDecoration = InputDecoration(
       border: OutlineInputBorder(),
@@ -99,59 +98,72 @@ class _LoginScreenState extends State<LoginScreen> {
     );
 
     var buttonStyle = ElevatedButton.styleFrom(
-      backgroundColor: primaryColor, // Button color
-      foregroundColor: secondaryColor, // Text color
+      backgroundColor: primaryColor,
+      foregroundColor: secondaryColor,
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(30),
       ),
     );
+
     return Scaffold(
-        body: Container(
-      color: secondaryColor, // Use your secondary color here
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextField(
-              controller: _emailController,
-              decoration: inputDecoration.copyWith(
-                labelText: 'E-Mail',
-                prefixIcon: const Icon(Icons.email, color: primaryColor),
-                labelStyle: const TextStyle(color: primaryColor),
-                focusedBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(color: primaryColor),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.lightBlueAccent, Colors.orangeAccent],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              FadeInDown(
+                child: TextField(
+                  controller: _emailController,
+                  decoration: inputDecoration.copyWith(
+                    labelText: 'E-Mail',
+                    prefixIcon: const Icon(Icons.email, color: primaryColor),
+                    labelStyle: const TextStyle(color: primaryColor),
+                    focusedBorder: const OutlineInputBorder(
+                      borderSide: BorderSide(color: primaryColor),
+                    ),
+                  ),
+                  keyboardType: TextInputType.emailAddress,
                 ),
               ),
-              keyboardType: TextInputType.emailAddress,
-              // Add validation logic as required
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: _passwordController,
-              decoration: inputDecoration.copyWith(
-                labelText: 'Password',
-                prefixIcon: const Icon(Icons.password, color: primaryColor),
-                labelStyle: const TextStyle(color: primaryColor),
-                focusedBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(color: primaryColor),
+              const SizedBox(height: 10),
+              FadeInDown(
+                child: TextField(
+                  controller: _passwordController,
+                  decoration: inputDecoration.copyWith(
+                    labelText: 'Password',
+                    prefixIcon: const Icon(Icons.lock, color: primaryColor),
+                    labelStyle: const TextStyle(color: primaryColor),
+                    focusedBorder: const OutlineInputBorder(
+                      borderSide: BorderSide(color: primaryColor),
+                    ),
+                  ),
+                  obscureText: true,
                 ),
               ),
-              obscureText: true,
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              style: buttonStyle,
-              onPressed: _login,
-              child: Text(
-                'Login',
-                style: GoogleFonts.lato(fontSize: 18, color: Colors.white),
+              const SizedBox(height: 20),
+              FadeInUp(
+                child: ElevatedButton(
+                  style: buttonStyle,
+                  onPressed: _login,
+                  child: Text(
+                    'Login',
+                    style: GoogleFonts.lato(fontSize: 18, color: Colors.white),
+                  ),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-    ));
+    );
   }
 }

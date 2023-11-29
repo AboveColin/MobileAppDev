@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'CarScreen.dart';
-import 'helpers/ApiService.dart'; // Import ApiService
+import 'helpers/ApiService.dart';
 
 class CarList extends StatefulWidget {
   const CarList({Key? key}) : super(key: key);
@@ -11,18 +11,17 @@ class CarList extends StatefulWidget {
 
 class _CarListState extends State<CarList> {
   late Future<List<dynamic>> carsFuture;
-  final ApiService _apiService =
-      ApiService(); // Create an instance of ApiService
+  final ApiService _apiService = ApiService();
 
   @override
   void initState() {
     super.initState();
-    carsFuture = _apiService.fetchCars(); // Use fetchCars from ApiService
+    carsFuture = _apiService.fetchCars();
   }
 
   Future<void> _refreshData() async {
     setState(() {
-      carsFuture = _apiService.fetchCars(); // Reset the future to reload data
+      carsFuture = _apiService.fetchCars();
     });
   }
 
@@ -49,7 +48,7 @@ class _CarListState extends State<CarList> {
                   return Card(
                     margin: EdgeInsets.all(8.0),
                     child: ListTile(
-                      leading: Icon(Icons.directions_car), // Example icon
+                      leading: Icon(Icons.directions_car),
                       title: Text(
                         '${car["brand"]} ${car["model"]}',
                         style: TextStyle(fontWeight: FontWeight.bold),

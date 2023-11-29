@@ -6,13 +6,12 @@ class ApiService {
   final String baseUrl = "https://automaat.cdevries.dev";
   final StorageHelper storageHelper = StorageHelper();
 
-  // Method to get the Authorization header
   Future<Map<String, String>> _getHeaders() async {
     String? token = await storageHelper.getToken();
     if (token != null) {
       return {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token', // Include the token here
+        'Authorization': 'Bearer $token',
       };
     }
     return {'Content-Type': 'application/json'};
@@ -68,10 +67,10 @@ class ApiService {
         body: jsonEncode(<String, String>{
           'email': email,
           'password': password,
-          'last_name': lastName, // Changed to snake_case
-          'first_name': firstName, // Changed to snake_case
-          'birth_date': birthDate, // Changed to snake_case
-          'profile_picture': '', // Changed to snake_case
+          'last_name': lastName,
+          'first_name': firstName,
+          'birth_date': birthDate,
+          'profile_picture': '',
         }),
       );
 
@@ -91,7 +90,7 @@ class ApiService {
     }
   }
 
-  // Modify the fetch methods to use the headers
+  // Protected routes
   Future<Map<String, dynamic>> fetchDashboardData() async {
     var url = Uri.parse('$baseUrl/getdashboard');
     try {
@@ -100,8 +99,7 @@ class ApiService {
 
       if (response.statusCode == 200) {
         var jsonData = json.decode(response.body);
-        return jsonData[
-            'Dashboard']; // Assuming 'Dashboard' is the key in the JSON response
+        return jsonData['Dashboard'];
       } else {
         print('Failed to load data');
         throw Exception('Failed to load data');
@@ -112,7 +110,6 @@ class ApiService {
     }
   }
 
-  // Similar modifications for other fetch methods
   Future<List<dynamic>> fetchRentals() async {
     var url = Uri.parse('$baseUrl/getRentals');
     try {
@@ -121,8 +118,7 @@ class ApiService {
 
       if (response.statusCode == 200) {
         var jsonData = json.decode(response.body);
-        return jsonData[
-            'Rentals']; // Assuming 'Rentals' is the key in the JSON response
+        return jsonData['Rentals'];
       } else {
         print('Failed to load data');
         throw Exception('Failed to load data');
@@ -136,12 +132,12 @@ class ApiService {
   Future<List<dynamic>> fetchCars() async {
     var url = Uri.parse('$baseUrl/getCars');
     try {
-      var response = await http.get(url);
+      var headers = await _getHeaders();
+      var response = await http.get(url, headers: headers);
 
       if (response.statusCode == 200) {
         var jsonData = json.decode(response.body);
-        return jsonData[
-            'Cars']; // Assuming 'Cars' is the key in the JSON response
+        return jsonData['Cars'];
       } else {
         print('Failed to load data');
         throw Exception('Failed to load data');
@@ -155,11 +151,12 @@ class ApiService {
   Future<Map<String, dynamic>> fetchCar(int id) async {
     var url = Uri.parse('$baseUrl/getCar/$id');
     try {
-      var response = await http.get(url);
+      var headers = await _getHeaders();
+      var response = await http.get(url, headers: headers);
 
       if (response.statusCode == 200) {
         var jsonData = json.decode(response.body);
-        return jsonData; // Assuming the JSON response contains the car details directly
+        return jsonData;
       } else {
         print('Failed to load data');
         throw Exception('Failed to load data');
@@ -170,14 +167,15 @@ class ApiService {
     }
   }
 
-  Future<Map<String, dynamic>> fetchCustomer(int id) async {
-    var url = Uri.parse('$baseUrl/getCustomer/$id');
+  Future<Map<String, dynamic>> fetchCustomer() async {
+    var url = Uri.parse('$baseUrl/getCustomer');
     try {
-      var response = await http.get(url);
+      var headers = await _getHeaders();
+      var response = await http.get(url, headers: headers);
 
       if (response.statusCode == 200) {
         var jsonData = json.decode(response.body);
-        return jsonData; // Assuming the JSON response contains the customer details directly
+        return jsonData;
       } else {
         print('Failed to load data');
         throw Exception('Failed to load data');
@@ -191,11 +189,12 @@ class ApiService {
   Future<Map<String, dynamic>> fetchRental(int id) async {
     var url = Uri.parse('$baseUrl/getRental/$id');
     try {
-      var response = await http.get(url);
+      var headers = await _getHeaders();
+      var response = await http.get(url, headers: headers);
 
       if (response.statusCode == 200) {
         var jsonData = json.decode(response.body);
-        return jsonData; // Assuming the JSON response contains the rental details directly
+        return jsonData;
       } else {
         print('Failed to load data');
         throw Exception('Failed to load data');
@@ -204,23 +203,5 @@ class ApiService {
       print('Error: $e');
       throw Exception('Failed to load data');
     }
-  }
-}
-
-Future<Map<String, dynamic>> fetchUserProfile() async {
-  var url = Uri.parse('https://automaat.cdevries.dev/getUserProfile');
-  try {
-    var response = await http.get(url);
-
-    if (response.statusCode == 200) {
-      var jsonData = json.decode(response.body);
-      return jsonData; // Assuming the JSON response contains the user profile details directly
-    } else {
-      print('Failed to load data');
-      throw Exception('Failed to load data');
-    }
-  } catch (e) {
-    print('Error: $e');
-    throw Exception('Failed to load data');
   }
 }
