@@ -107,10 +107,21 @@ class _LoginScreenState extends State<LoginScreen> {
     );
 
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: primaryColor),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.lightBlueAccent, Colors.orangeAccent],
+            colors: [
+              Color(0xFF6DD5FA),
+              Color(0xFFFF758C)
+            ], // Updated vibrant gradient colors
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
