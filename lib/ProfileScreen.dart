@@ -25,11 +25,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _fetchCustomerData() async {
-    // Replace with your logic to get the customer ID
-    Map<String, dynamic> data = await _apiService.fetchCustomer();
-    setState(() {
-      customerData = data;
-    });
+    try {
+      Map<String, dynamic> data = await _apiService.fetchCustomer();
+      setState(() {
+        customerData = data;
+      });
+      print(customerData); // Log de opgehaalde gegevens
+    } catch (e) {
+      print('Fout bij het ophalen van klantgegevens: $e');
+      // Je kunt hier ook een foutmelding tonen aan de gebruiker
+    }
   }
 
   @override
@@ -64,7 +69,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             const SizedBox(height: 10),
             Text(
-              'Username: ${customerData['username'] ?? "Loading..."}',
+              'Naam: ${customerData['Customer']?[0]['lastName'] ?? "Loading..."}',
               style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -72,7 +77,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             const SizedBox(height: 4),
             Text(
-              'Email: ${customerData['email'] ?? "Loading..."}',
+              'Email: ${customerData['Customer']?[0]['email'] ?? "Loading..."}',
               style: const TextStyle(
                 fontSize: 18,
                 color: Colors.grey,

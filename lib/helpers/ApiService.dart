@@ -19,6 +19,7 @@ class ApiService {
 
   Future<bool> loginUser(
       {required String email, required String password}) async {
+    print(email + password);
     var url = Uri.parse('$baseUrl/login');
     try {
       var response = await http.post(

@@ -52,6 +52,7 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     try {
+      print('Logging in...');
       // Call the login method of the ApiService
       var response = await _apiService.loginUser(
         email: email,
