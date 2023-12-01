@@ -1,6 +1,6 @@
-import 'Dashboard.dart';
+import 'package:mobileappdev/views/Dashboard.dart';
 import 'MapScreen.dart';
-import 'ProfileScreen.dart';
+import 'package:mobileappdev/views/profile/ProfileScreen.dart';
 import 'CarList.dart';
 import 'FAQ_Screen.dart';
 import 'package:flutter/material.dart';

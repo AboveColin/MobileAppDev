@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'SettingsScreen.dart';
-import 'StartScreen.dart';
+import '../SettingsScreen.dart';
+import '../StartScreen.dart';
 import 'package:mobileappdev/helpers/StorageHelper.dart';
-import 'package:mobileappdev/Views/EditProfileScreen.dart';
+import 'package:mobileappdev/views/profile/EditProfileScreen.dart';
 
 class ProfileScreen extends StatefulWidget {
   final Function(bool) onThemeChanged;
