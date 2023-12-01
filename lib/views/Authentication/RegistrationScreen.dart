@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:mobileappdev/StartScreen.dart';
+import 'package:mobileappdev/views/StartScreen.dart';
 import 'package:mobileappdev/helpers/ApiService.dart';
-import 'package:intl/intl.dart'; // Add this line for date formatting
-import 'package:mobileappdev/HomeScreen.dart';
+import 'package:intl/intl.dart';
+import 'package:mobileappdev/helpers/StorageHelper.dart';
 
 class RegistrationScreen extends StatefulWidget {
+  const RegistrationScreen({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _RegistrationScreenState createState() => _RegistrationScreenState();
 }
 
@@ -16,6 +19,29 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final _firstNameController = TextEditingController();
   DateTime _birthDate = DateTime.now(); // Changed to DateTime
   final ApiService _apiService = ApiService();
+
+  // ignore: unused_field
+  bool _darkMode = false;
+
+  void _updateTheme(bool isDarkMode) {
+    setState(() {
+      _darkMode = isDarkMode;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSettings();
+  }
+
+  Future<void> _loadSettings() async {
+    final preferencesService = StorageHelper();
+    final settings = await preferencesService.getSettings();
+    setState(() {
+      _darkMode = settings.darkMode;
+    });
+  }
 
   void _register() async {
     // ignore: unnecessary_null_comparison
@@ -62,16 +88,20 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => StartScreen(),
+            builder: (context) => StartScreen(
+              onThemeChanged: _updateTheme,
+            ),
           ),
         ); // Example
       } else {
+        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(response.toString())),
         );
       }
     } catch (e) {
       // Handle any errors here
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Registration failed: $e')),
       );

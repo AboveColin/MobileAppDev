@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'helpers/ApiService.dart'; // Import ApiService
+import '../helpers/ApiService.dart'; // Import ApiService
 
 class CarScreen extends StatelessWidget {
   CarScreen({Key? key, required this.id}) : super(key: key);
@@ -12,6 +12,7 @@ class CarScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Car Details'),
+        centerTitle: true,
       ),
       body: FutureBuilder<Map<String, dynamic>>(
         future: _apiService.fetchCar(id),

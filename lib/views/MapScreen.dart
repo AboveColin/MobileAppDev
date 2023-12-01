@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'CarScreen.dart';
-import 'helpers/ApiService.dart';
+import '../helpers/ApiService.dart';
 import 'package:geolocator/geolocator.dart';
 
 class MapScreen extends StatefulWidget {
@@ -22,6 +22,7 @@ class _MapScreenState extends State<MapScreen> {
   @override
   void initState() {
     super.initState();
+    _determinePosition();
     mapController = MapController();
     rentalsFuture = _apiService.fetchRentals();
   }
@@ -33,30 +34,30 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   Future<void> _determinePosition() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      // Location services are not enabled. Notify the user or handle accordingly.
-      return Future.error('Location services are disabled.');
+      // Location services are not enabled, you can request the user to enable it
+      return;
     }
 
-    permission = await Geolocator.checkPermission();
+    LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        // Permissions are denied. Notify the user or handle accordingly.
-        return Future.error('Location permissions are denied.');
+        // Permissions are denied, you can show a message to the user
+        return;
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
-      // Permissions are permanently denied. Notify the user or handle accordingly.
-      return Future.error('Location permissions are permanently denied.');
+      // Permissions are permanently denied, you can show a message to the user
+      return;
     }
 
+    // If permissions are granted, proceed to get the location
     Position position = await Geolocator.getCurrentPosition();
+    // check if mounted to prevent setState after dispose
+    if (!mounted) return;
     setState(() {
       currentPosition = position;
       _locationInitialized = true;
@@ -92,12 +93,14 @@ class _MapScreenState extends State<MapScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Map"),
+        centerTitle: true,
       ),
       body: FutureBuilder<List<dynamic>>(
         future: rentalsFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done &&
-              snapshot.hasData) {
+              snapshot.hasData &&
+              _locationInitialized) {
             var markers = createMarkers(snapshot.data!, context);
 
             // Add current location marker if location is initialized

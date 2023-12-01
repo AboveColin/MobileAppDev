@@ -1,19 +1,46 @@
 import 'package:flutter/material.dart';
-import 'helpers/shared_preferences.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import '../helpers/StorageHelper.dart';
+import '../models/Settings.dart';
 
 class SettingsScreen extends StatefulWidget {
   final Function(bool) onThemeChanged;
 
-  const SettingsScreen({Key? key, required this.onThemeChanged})
-      : super(key: key);
+  const SettingsScreen({super.key, required this.onThemeChanged});
 
   @override
+  // ignore: library_private_types_in_public_api
   _SettingsScreenState createState() => _SettingsScreenState();
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
   bool darkMode = false;
-  final _preferencesService = PreferencesService();
+  final StorageHelper _preferencesService = StorageHelper();
+
+  void showNotification() async {
+    print('showNotification');
+    var androidDetails = const AndroidNotificationDetails(
+      'channelId',
+      'channelName',
+      channelDescription: 'channelDescription',
+      importance: Importance.max,
+      priority:
+          Priority.high, // optioneel, bepaalt de prioriteit van de notificatie
+      showWhen: true, // optioneel, toont of verbergt de tijd van de notificatie
+      // Andere configuraties indien nodig
+    );
+    var generalNotificationDetails =
+        NotificationDetails(android: androidDetails);
+
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      'Notificatie Titel',
+      'Dit is de body van de notificatie',
+      generalNotificationDetails,
+    );
+  }
 
   @override
   void initState() {
@@ -22,7 +49,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   void _populateFields() async {
-    final settings = await _preferencesService.getSettings();
+    final settingsJson = await _preferencesService.getSettings();
+    final settings = Settings.fromJson({
+      'darkMode': settingsJson.darkMode,
+    });
     setState(() {
       darkMode = settings.darkMode;
     });
@@ -62,6 +92,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             title: const Text('Notifications'),
             onTap: () {
               // Navigate to notification settings
+              showNotification();
             },
           ),
           ListTile(
@@ -80,12 +111,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
             title: const Text('About'),
             onTap: () {
               // Show app version or other information
-            },
-          ),
-          ListTile(
-            title: const Text('Sign Out'),
-            onTap: () {
-              // Handle user sign-out
             },
           ),
         ],

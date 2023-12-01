@@ -1,9 +1,59 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animator/flutter_animator.dart'; // Add flutter_animator package for animations
-import 'Authentication/LoginScreen.dart';
-import 'Authentication/RegistrationScreen.dart';
+import 'package:mobileappdev/views/Authentication/LoginScreen.dart';
+import 'package:mobileappdev/views/Authentication/RegistrationScreen.dart';
+import 'package:mobileappdev/helpers/StorageHelper.dart';
+import 'package:mobileappdev/views/HomeScreen.dart';
 
-class StartScreen extends StatelessWidget {
+class StartScreen extends StatefulWidget {
+  final Function(bool) onThemeChanged;
+  const StartScreen({super.key, required this.onThemeChanged});
+  @override
+  // ignore: library_private_types_in_public_api
+  _StartScreenState createState() => _StartScreenState();
+}
+
+class _StartScreenState extends State<StartScreen> {
+  final StorageHelper storageHelper = StorageHelper();
+  // ignore: unused_field
+  bool _darkMode = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkIfLoggedIn();
+    _loadSettings();
+  }
+
+  Future<void> _loadSettings() async {
+    final settings = await storageHelper.getSettings();
+    if (mounted) {
+      setState(() {
+        _darkMode = settings.darkMode;
+      });
+    }
+  }
+
+  Future<void> _checkIfLoggedIn() async {
+    String? token = await storageHelper.getToken();
+    if (token != null && mounted) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MyHomePage(
+            onThemeChanged: (bool isDarkMode) {
+              if (mounted) {
+                setState(() {
+                  _darkMode = isDarkMode;
+                });
+              }
+            },
+          ),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,7 +119,9 @@ class StartScreen extends StatelessWidget {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => LoginScreen()));
+                                    builder: (context) => LoginScreen(
+                                          onThemeChanged: widget.onThemeChanged,
+                                        )));
                           },
                         ),
                         const SizedBox(height: 15),

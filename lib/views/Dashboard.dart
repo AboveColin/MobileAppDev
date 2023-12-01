@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'helpers/ApiService.dart'; // Import ApiService
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import '../helpers/ApiService.dart'; // Import ApiService
 
 class DashboardScreen extends StatelessWidget {
   DashboardScreen({Key? key}) : super(key: key);
@@ -12,6 +11,7 @@ class DashboardScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Dashboard'),
+        centerTitle: true,
       ),
       body: FutureBuilder<Map<String, dynamic>>(
         future: _apiService.fetchDashboardData(),

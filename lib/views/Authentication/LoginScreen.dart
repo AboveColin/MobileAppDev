@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animator/flutter_animator.dart'; // Add this package for animations
-import 'package:mobileappdev/HomeScreen.dart';
+import 'package:mobileappdev/views/HomeScreen.dart';
 import 'package:mobileappdev/helpers/ApiService.dart';
-import '../helpers/shared_preferences.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mobileappdev/helpers/StorageHelper.dart';
 
 class LoginScreen extends StatefulWidget {
+  final Function(bool) onThemeChanged;
+  const LoginScreen({super.key, required this.onThemeChanged});
   @override
+  // ignore: library_private_types_in_public_api
   _LoginScreenState createState() => _LoginScreenState();
 }
 
@@ -15,6 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
   final ApiService _apiService = ApiService();
 
+  // ignore: unused_field
   bool _darkMode = false;
 
   void _updateTheme(bool isDarkMode) {
@@ -30,7 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _loadSettings() async {
-    final preferencesService = PreferencesService();
+    final preferencesService = StorageHelper();
     final settings = await preferencesService.getSettings();
     setState(() {
       _darkMode = settings.darkMode;
@@ -63,12 +67,11 @@ class _LoginScreenState extends State<LoginScreen> {
       if (response == true) {
         // Navigate to the next screen or show a success message
         // ignore: use_build_context_synchronously
-        Navigator.push(
+        Navigator.pushReplacement(
             context,
             MaterialPageRoute(
               builder: (context) => MyHomePage(
-                title: 'Available Cars',
-                onThemeChanged: _updateTheme, // Passing the callback
+                onThemeChanged: _updateTheme,
               ),
             ));
       } else {

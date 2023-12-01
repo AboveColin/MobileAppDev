@@ -2,17 +2,13 @@ import 'Dashboard.dart';
 import 'MapScreen.dart';
 import 'ProfileScreen.dart';
 import 'CarList.dart';
-import 'Authentication/LoginScreen.dart';
-import 'Authentication/RegistrationScreen.dart';
+import 'FAQ_Screen.dart';
 import 'package:flutter/material.dart';
-import 'helpers/shared_preferences.dart';
+import 'package:mobileappdev/helpers/StorageHelper.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage(
-      {super.key, required this.title, required this.onThemeChanged});
-
-  final String title;
   final Function(bool) onThemeChanged;
+  const MyHomePage({super.key, required this.onThemeChanged});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -20,6 +16,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
+  // ignore: unused_field
   bool _darkMode = false;
 
   @override
@@ -29,11 +26,13 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> _loadSettings() async {
-    final preferencesService = PreferencesService();
+    final preferencesService = StorageHelper();
     final settings = await preferencesService.getSettings();
-    setState(() {
-      _darkMode = settings.darkMode;
-    });
+    if (mounted) {
+      setState(() {
+        _darkMode = settings.darkMode;
+      });
+    }
   }
 
   late final List<Widget> _widgetOptions = <Widget>[
@@ -41,6 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
     const CarList(),
     const MapScreen(),
     ProfileScreen(onThemeChanged: widget.onThemeChanged),
+    FAQScreen(),
   ];
 
   @override
@@ -70,6 +70,8 @@ class _MyHomePageState extends State<MyHomePage> {
             icon: Icon(Icons.person),
             label: 'Profile',
           ),
+          NavigationDestination(
+              icon: Icon(Icons.question_mark_rounded), label: 'FAQ')
         ],
         selectedIndex: _selectedIndex,
         indicatorColor: Colors.amber[800],
