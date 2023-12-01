@@ -6,7 +6,7 @@ import '../helpers/ApiService.dart';
 import 'package:geolocator/geolocator.dart';
 
 class MapScreen extends StatefulWidget {
-  const MapScreen({Key? key}) : super(key: key);
+  const MapScreen({super.key});
 
   @override
   _MapScreenState createState() => _MapScreenState();
@@ -114,7 +114,7 @@ class _MapScreenState extends State<MapScreen> {
                   height: 30,
                   child: IconButton(
                     // give random color to each marker
-                    icon: Icon(Icons.my_location, color: Colors.red),
+                    icon: const Icon(Icons.my_location, color: Colors.red),
                     onPressed: () {},
                   ),
                 ),
@@ -129,7 +129,7 @@ class _MapScreenState extends State<MapScreen> {
                 center: _locationInitialized
                     ? LatLng(
                         currentPosition.latitude, currentPosition.longitude)
-                    : LatLng(53.2176164346326, 6.565919420735281),
+                    : const LatLng(53.2176164346326, 6.565919420735281),
                 zoom: 13.0,
               ),
               children: [
@@ -149,7 +149,7 @@ class _MapScreenState extends State<MapScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: refreshRentals,
-        child: Icon(Icons.refresh),
+        child: const Icon(Icons.refresh),
       ),
     );
   }

@@ -5,6 +5,7 @@ import 'package:mobileappdev/helpers/ApiService.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mobileappdev/helpers/StorageHelper.dart';
 import 'package:mobileappdev/views/Authentication/ForgotPasswordScreen.dart';
+import 'package:mobileappdev/theme_config.dart';
 
 class LoginScreen extends StatefulWidget {
   final Function(bool) onThemeChanged;
@@ -92,9 +93,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    const primaryColor = Color(0xFF6C63FF); // Example primary color
-    const secondaryColor = Color(0xFFF5F6FA); // Example secondary color
-
     const inputDecoration = InputDecoration(
       border: OutlineInputBorder(),
       labelText: '',
@@ -103,8 +101,8 @@ class _LoginScreenState extends State<LoginScreen> {
     );
 
     var buttonStyle = ElevatedButton.styleFrom(
-      backgroundColor: primaryColor,
-      foregroundColor: secondaryColor,
+      backgroundColor: ThemeConfig.primaryColor,
+      foregroundColor: ThemeConfig.secondaryColor,
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(30),
@@ -112,11 +110,13 @@ class _LoginScreenState extends State<LoginScreen> {
     );
 
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
+        title: const Text('Login'),
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: primaryColor),
+          icon: const Icon(Icons.arrow_back, color: ThemeConfig.primaryColor),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
@@ -141,10 +141,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   controller: _emailController,
                   decoration: inputDecoration.copyWith(
                     labelText: 'E-Mail',
-                    prefixIcon: const Icon(Icons.email, color: primaryColor),
-                    labelStyle: const TextStyle(color: primaryColor),
+                    prefixIcon: const Icon(Icons.email,
+                        color: ThemeConfig.primaryColor),
+                    labelStyle:
+                        const TextStyle(color: ThemeConfig.primaryColor),
                     focusedBorder: const OutlineInputBorder(
-                      borderSide: BorderSide(color: primaryColor),
+                      borderSide: BorderSide(color: ThemeConfig.primaryColor),
                     ),
                   ),
                   keyboardType: TextInputType.emailAddress,
@@ -156,10 +158,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   controller: _passwordController,
                   decoration: inputDecoration.copyWith(
                     labelText: 'Password',
-                    prefixIcon: const Icon(Icons.lock, color: primaryColor),
-                    labelStyle: const TextStyle(color: primaryColor),
+                    prefixIcon:
+                        const Icon(Icons.lock, color: ThemeConfig.primaryColor),
+                    labelStyle:
+                        const TextStyle(color: ThemeConfig.primaryColor),
                     focusedBorder: const OutlineInputBorder(
-                      borderSide: BorderSide(color: primaryColor),
+                      borderSide: BorderSide(color: ThemeConfig.primaryColor),
                     ),
                   ),
                   obscureText: true,
@@ -184,7 +188,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ForgotPasswordScreen(apiService: _apiService),
                     ));
                   },
-                  child: Text(
+                  child: const Text(
                     'Forgot Password?',
                     style: TextStyle(color: Colors.blue),
                   ),

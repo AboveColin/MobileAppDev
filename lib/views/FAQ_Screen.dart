@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class FAQScreen extends StatefulWidget {
+  const FAQScreen({super.key});
+
   @override
   _FAQScreenState createState() => _FAQScreenState();
 }
@@ -10,12 +12,12 @@ class _FAQScreenState extends State<FAQScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('FAQs'),
+        title: const Text('FAQs'),
         centerTitle: true,
       ),
       body: ListView(
-        padding: EdgeInsets.all(10),
-        children: <Widget>[
+        padding: const EdgeInsets.all(10),
+        children: const <Widget>[
           FAQItem(
             question: "How do I reserve a car?",
             answer:
@@ -42,7 +44,7 @@ class FAQItem extends StatelessWidget {
   final String question;
   final String answer;
 
-  FAQItem({required this.question, required this.answer});
+  const FAQItem({super.key, required this.question, required this.answer});
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +53,7 @@ class FAQItem extends StatelessWidget {
         title: Text(question),
         children: <Widget>[
           Padding(
-            padding: EdgeInsets.all(15),
+            padding: const EdgeInsets.all(15),
             child: Text(answer),
           ),
         ],

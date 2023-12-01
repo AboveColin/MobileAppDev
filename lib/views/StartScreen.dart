@@ -104,8 +104,7 @@ class _StartScreenState extends State<StartScreen> {
                       children: [
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            primary: Colors.white,
-                            onPrimary: Colors.blue,
+                            foregroundColor: Colors.blue, backgroundColor: Colors.white,
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 50, vertical: 15),
                             shape: RoundedRectangleBorder(
@@ -127,8 +126,7 @@ class _StartScreenState extends State<StartScreen> {
                         const SizedBox(height: 15),
                         OutlinedButton(
                           style: OutlinedButton.styleFrom(
-                            primary: Colors.white,
-                            side: const BorderSide(color: Colors.white),
+                            foregroundColor: Colors.white, side: const BorderSide(color: Colors.white),
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 45, vertical: 15),
                             shape: RoundedRectangleBorder(
@@ -142,7 +140,7 @@ class _StartScreenState extends State<StartScreen> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        RegistrationScreen()));
+                                        const RegistrationScreen()));
                           },
                         ),
                       ],

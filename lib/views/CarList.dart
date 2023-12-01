@@ -4,7 +4,7 @@ import '../helpers/ApiService.dart';
 import '../helpers/StorageHelper.dart';
 
 class CarList extends StatefulWidget {
-  const CarList({Key? key}) : super(key: key);
+  const CarList({super.key});
 
   @override
   _CarListState createState() => _CarListState();
@@ -64,7 +64,7 @@ class _CarListState extends State<CarList> {
   Widget _buildSearchBar() {
     return TextField(
       controller: _searchController,
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
         hintText: 'Zoek auto',
         suffixIcon: Icon(Icons.search),
       ),
@@ -101,7 +101,7 @@ class _CarListState extends State<CarList> {
         title: const Text('Available Cars'),
         centerTitle: true,
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(80.0),
+          preferredSize: const Size.fromHeight(80.0),
           child: Column(
             children: [
               _buildSearchBar(),
@@ -124,16 +124,16 @@ class _CarListState extends State<CarList> {
                 itemBuilder: (context, index) {
                   var car = cars[index];
                   return Card(
-                    margin: EdgeInsets.all(8.0),
+                    margin: const EdgeInsets.all(8.0),
                     child: ListTile(
-                      leading: Icon(Icons.directions_car),
+                      leading: const Icon(Icons.directions_car),
                       title: Text(
                         '${car["brand"]} ${car["model"]}',
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       subtitle: Text(
                           'License Plate: ${car["licensePlate"]} \nFuel: ${car["fuel"]}'),
-                      trailing: Icon(Icons.arrow_forward_ios),
+                      trailing: const Icon(Icons.arrow_forward_ios),
                       onTap: () {
                         Navigator.push(
                           context,

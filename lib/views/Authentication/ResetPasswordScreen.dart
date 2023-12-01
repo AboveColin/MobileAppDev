@@ -4,8 +4,7 @@ import 'package:mobileappdev/helpers/ApiService.dart';
 class ResetPasswordScreen extends StatefulWidget {
   final String resetToken;
 
-  const ResetPasswordScreen({Key? key, required this.resetToken})
-      : super(key: key);
+  const ResetPasswordScreen({super.key, required this.resetToken});
 
   @override
   _ResetPasswordScreenState createState() => _ResetPasswordScreenState();

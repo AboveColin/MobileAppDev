@@ -89,7 +89,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             },
           ),
           ListTile(
-            title: const Text('Notifications'),
+            title: const Text('Test notifications'),
             onTap: () {
               // Navigate to notification settings
               showNotification();

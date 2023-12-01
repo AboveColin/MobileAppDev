@@ -4,8 +4,7 @@ import 'package:mobileappdev/helpers/ApiService.dart';
 class ForgotPasswordScreen extends StatefulWidget {
   final ApiService apiService;
 
-  const ForgotPasswordScreen({Key? key, required this.apiService})
-      : super(key: key);
+  const ForgotPasswordScreen({super.key, required this.apiService});
 
   @override
   _ForgotPasswordScreenState createState() => _ForgotPasswordScreenState();
@@ -23,19 +22,19 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Reset Password')),
+      appBar: AppBar(title: const Text('Reset Password')),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
             TextField(
               controller: _emailController,
-              decoration: InputDecoration(labelText: 'Email'),
+              decoration: const InputDecoration(labelText: 'Email'),
               keyboardType: TextInputType.emailAddress,
             ),
             ElevatedButton(
               onPressed: _resetPassword,
-              child: Text('Send Reset Link'),
+              child: const Text('Send Reset Link'),
             ),
           ],
         ),

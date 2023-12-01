@@ -4,7 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:mobileappdev/models/Settings.dart';
 
 class StorageHelper {
-  final _storage = FlutterSecureStorage();
+  final _storage = const FlutterSecureStorage();
 
   Future<void> saveToken(String token) async {
     await _storage.write(key: 'token', value: token);

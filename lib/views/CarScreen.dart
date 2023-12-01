@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../helpers/ApiService.dart'; // Import ApiService
 
 class CarScreen extends StatelessWidget {
-  CarScreen({Key? key, required this.id}) : super(key: key);
+  CarScreen({super.key, required this.id});
 
   final int id;
   final ApiService _apiService = ApiService();

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../helpers/ApiService.dart'; // Import ApiService
 
 class DashboardScreen extends StatelessWidget {
-  DashboardScreen({Key? key}) : super(key: key);
+  DashboardScreen({super.key});
 
   final ApiService _apiService = ApiService();
 

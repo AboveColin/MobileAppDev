@@ -3,7 +3,7 @@ import 'package:mobileappdev/helpers/ApiService.dart';
 import 'package:mobileappdev/helpers/StorageHelper.dart';
 
 class EditProfileScreen extends StatefulWidget {
-  EditProfileScreen({Key? key}) : super(key: key);
+  const EditProfileScreen({super.key});
 
   @override
   _EditProfileScreenState createState() => _EditProfileScreenState();
@@ -124,17 +124,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit Profile'),
+        title: const Text('Edit Profile'),
       ),
       body: _isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
               child: Padding(
-                padding: EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Text('Change Profile', style: TextStyle(fontSize: 20)),
+                    const Text('Change Profile', style: TextStyle(fontSize: 20)),
                     // Profile Update Form
                     Form(
                       key: _formKey,
@@ -142,18 +142,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         children: [
                           TextFormField(
                             initialValue: email,
-                            decoration: InputDecoration(labelText: 'Email'),
+                            decoration: const InputDecoration(labelText: 'Email'),
                             onSaved: (value) => email = value ?? '',
                           ),
                           TextFormField(
                             initialValue: firstName,
                             decoration:
-                                InputDecoration(labelText: 'First Name'),
+                                const InputDecoration(labelText: 'First Name'),
                             onSaved: (value) => firstName = value ?? '',
                           ),
                           TextFormField(
                             initialValue: lastName,
-                            decoration: InputDecoration(labelText: 'Last Name'),
+                            decoration: const InputDecoration(labelText: 'Last Name'),
                             onSaved: (value) => lastName = value ?? '',
                           ),
                           InkWell(
@@ -162,27 +162,27 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               child: TextFormField(
                                 initialValue: birthDate,
                                 decoration:
-                                    InputDecoration(labelText: 'Birth Date'),
+                                    const InputDecoration(labelText: 'Birth Date'),
                                 onSaved: (value) => birthDate = value ?? '',
                               ),
                             ),
                           ),
                           TextFormField(
                             initialValue: profilePicture,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                                 labelText: 'Profile Picture URL'),
                             onSaved: (value) => profilePicture = value ?? '',
                           ),
                           ElevatedButton(
                             onPressed: _updateProfile,
-                            child: Text('Update Profile'),
+                            child: const Text('Update Profile'),
                           ),
                         ],
                       ),
                     ),
-                    SizedBox(height: 30),
+                    const SizedBox(height: 30),
                     // Password Change Form
-                    Text('Change Password', style: TextStyle(fontSize: 20)),
+                    const Text('Change Password', style: TextStyle(fontSize: 20)),
                     Form(
                       key: _formKeyP,
                       child: Column(
@@ -223,8 +223,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           ),
                           ElevatedButton(
                             onPressed: _changePassword,
-                            child: const Text('Change Password'),
                             style: ElevatedButton.styleFrom(),
+                            child: const Text('Change Password'),
                           ),
                         ],
                       ),

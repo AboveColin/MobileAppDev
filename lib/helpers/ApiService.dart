@@ -2,8 +2,10 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:mobileappdev/helpers/StorageHelper.dart'; // Import StorageHelper
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 class ApiService {
+  final Connectivity _connectivity = Connectivity();
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
@@ -19,6 +21,12 @@ class ApiService {
       };
     }
     return {'Content-Type': 'application/json'};
+  }
+
+  Future<bool> _isConnected() async {
+    final connectivityResult = await _connectivity.checkConnectivity();
+    print(connectivityResult);
+    return connectivityResult != ConnectivityResult.none;
   }
 
   void showNotification(String token) async {
@@ -83,35 +91,44 @@ class ApiService {
     required String firstName,
     required String birthDate,
   }) async {
-    var url = Uri.parse('$baseUrl/register');
-    try {
-      var response = await http.post(
-        url,
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode(<String, String>{
-          'email': email,
-          'password': password,
-          'last_name': lastName,
-          'first_name': firstName,
-          'birth_date': birthDate,
-          'profile_picture': '',
-        }),
-      );
-
-      if (response.statusCode == 200) {
-        var jsonData = json.decode(response.body);
-
-        await storageHelper.saveToken(jsonData['access_token']);
-        return true;
-      } else {
-        print('Registration failed');
+    if (await _isConnected()) {
+      var url = Uri.parse('$baseUrl/register');
+      try {
+        print('Registering...');
+        var response = await http.post(
+          url,
+          headers: <String, String>{
+            'Content-Type': 'application/json',
+          },
+          body: jsonEncode(<String, String>{
+            'email': email,
+            'password': password,
+            'last_name': lastName,
+            'first_name': firstName,
+            'birth_date': birthDate,
+            'profile_picture': '',
+          }),
+        );
         print(response.body);
+
+        if (response.statusCode == 200) {
+          print('Registration successful');
+          var jsonData = json.decode(response.body);
+
+          await storageHelper.saveToken(jsonData['access_token']);
+          await fetchCustomer();
+          return true;
+        } else {
+          print('Registration failed');
+          print(response.body);
+          return false;
+        }
+      } catch (e) {
+        print('Error: $e');
         return false;
       }
-    } catch (e) {
-      print('Error: $e');
+    } else {
+      print('No internet connection');
       return false;
     }
   }

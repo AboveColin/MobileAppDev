@@ -62,7 +62,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       body: RefreshIndicator(
         onRefresh: _fetchCustomerData,
         child: SingleChildScrollView(
-          physics: AlwaysScrollableScrollPhysics(),
+          physics: const AlwaysScrollableScrollPhysics(),
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -122,15 +122,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => EditProfileScreen(),
+                builder: (context) => const EditProfileScreen(),
               ),
             );
           },
-          child: const Icon(Icons.edit),
           tooltip: 'Edit Profile',
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0),
-          )),
+          ),
+          child: const Icon(Icons.edit)),
     );
   }
 }

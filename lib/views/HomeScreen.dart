@@ -40,7 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
     const CarList(),
     const MapScreen(),
     ProfileScreen(onThemeChanged: widget.onThemeChanged),
-    FAQScreen(),
+    const FAQScreen(),
   ];
 
   @override
