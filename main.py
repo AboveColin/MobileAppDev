@@ -51,3 +51,22 @@ def read_item():
 def read_item(id: int):
     Car = query("SELECT * FROM car WHERE id = " + str(id) + " LIMIT 1;")
     return {"Car": Car}
+
+@app.get("/getRentalsFor/{id}")
+def read_item(id: int):
+    Rentals = query("SELECT fromDate, toDate FROM rental JOIN car ON rental.carId = car.id WHERE car.Id = " + str(id) + ";")
+    return {"Rentals": Rentals}
+
+@app.get("/getRentals/{id}/{dateFrom}/{dateTo}")
+def read_item(id: int, dateFrom: str, dateTo: str):
+    Rentals = query("""
+                    SELECT fromDate, toDate 
+                    FROM rental 
+                    JOIN car 
+                    ON rental.carId = car.id 
+                    WHERE car.Id = 1
+                    AND ((toDate < """ + str(dateFrom) + """ AND toDate < """ + str(dateTo) + """) 
+                    OR 
+                    (fromDate > """ + str(dateFrom) + """ AND fromDate > """ + str(dateTo) + """));
+    """)
+    return {"Rentals": Rentals}
