@@ -134,6 +134,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
+                    Text('Change Profile', style: TextStyle(fontSize: 20)),
                     // Profile Update Form
                     Form(
                       key: _formKey,
@@ -181,6 +182,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ),
                     SizedBox(height: 30),
                     // Password Change Form
+                    Text('Change Password', style: TextStyle(fontSize: 20)),
                     Form(
                       key: _formKeyP,
                       child: Column(
@@ -222,8 +224,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           ElevatedButton(
                             onPressed: _changePassword,
                             child: const Text('Change Password'),
-                            style:
-                                ElevatedButton.styleFrom(primary: Colors.red),
+                            style: ElevatedButton.styleFrom(),
                           ),
                         ],
                       ),

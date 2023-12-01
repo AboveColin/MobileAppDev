@@ -1,8 +1,12 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:mobileappdev/helpers/StorageHelper.dart'; // Import StorageHelper
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class ApiService {
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
   final String baseUrl = "https://automaat.cdevries.dev";
   final StorageHelper storageHelper = StorageHelper();
 
@@ -15,6 +19,26 @@ class ApiService {
       };
     }
     return {'Content-Type': 'application/json'};
+  }
+
+  void showNotification(String token) async {
+    var androidDetails = const AndroidNotificationDetails(
+      'channelId',
+      'channelName',
+      channelDescription: 'channelDescription',
+      importance: Importance.max,
+      priority: Priority.high,
+    );
+    var generalNotificationDetails =
+        NotificationDetails(android: androidDetails);
+
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      'Nieuw wachtwoord!',
+      'Hier is uw nieuwe wachtwoord!',
+      generalNotificationDetails,
+      payload: token, // The reset token you want to pass
+    );
   }
 
   Future<bool> loginUser(
@@ -268,6 +292,56 @@ class ApiService {
     } catch (e) {
       print('Error during password change: $e');
       return false;
+    }
+  }
+
+  Future<void> sendResetPasswordLink(String email) async {
+    var url = Uri.parse('$baseUrl/forgot-password');
+    try {
+      var response = await http.post(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({'email': email}),
+      );
+
+      if (response.statusCode == 200) {
+        // Assuming a successful response indicates password change
+        // send reset password link
+        var data = jsonDecode(response.body);
+
+        // print(data['token']);
+        showNotification(data['token']);
+        return;
+      } else {
+        // You can handle different status codes differently here
+        print(
+            'Password change failed with status code: ${response.statusCode}');
+        print('Response body: ${response.body}');
+        throw Exception('Failed to send reset password link');
+      }
+    } catch (e) {
+      print('Error during password change: $e');
+      throw Exception('Failed to send reset password link');
+    }
+  }
+
+  Future<bool> resetPassword(String token, String newPassword) async {
+    final url = Uri.parse('$baseUrl/reset-password');
+    final response = await http.post(
+      url,
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode({
+        'token': token,
+        'new_password': newPassword,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      return true; // Password reset successful
+    } else {
+      return false; // Password reset failed
     }
   }
 }

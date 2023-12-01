@@ -4,6 +4,7 @@ import 'package:mobileappdev/views/HomeScreen.dart';
 import 'package:mobileappdev/helpers/ApiService.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mobileappdev/helpers/StorageHelper.dart';
+import 'package:mobileappdev/views/Authentication/ForgotPasswordScreen.dart';
 
 class LoginScreen extends StatefulWidget {
   final Function(bool) onThemeChanged;
@@ -175,6 +176,20 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               ),
+              FadeInUp(
+                child: TextButton(
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) =>
+                          ForgotPasswordScreen(apiService: _apiService),
+                    ));
+                  },
+                  child: Text(
+                    'Forgot Password?',
+                    style: TextStyle(color: Colors.blue),
+                  ),
+                ),
+              )
             ],
           ),
         ),
