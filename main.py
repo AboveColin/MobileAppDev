@@ -57,7 +57,7 @@ def read_item(id: int):
     Rentals = query("SELECT fromDate, toDate FROM rental JOIN car ON rental.carId = car.id WHERE car.Id = " + str(id) + ";")
     return {"Rentals": Rentals}
 
-@app.get("/getRentals/{id}/{dateFrom}/{dateTo}")
+@app.get("/getAvailabilityFor/{id}/{dateFrom}/{dateTo}")
 def read_item(id: int, dateFrom: str, dateTo: str):
     Rentals = query("""
                     SELECT fromDate, toDate 
@@ -70,3 +70,22 @@ def read_item(id: int, dateFrom: str, dateTo: str):
                     (fromDate > """ + str(dateFrom) + """ AND fromDate > """ + str(dateTo) + """));
     """)
     return {"Rentals": Rentals}
+
+class Rental:  
+    latitude: float
+    longitude: float
+    fromDate: str
+    toDate: str
+    customerNr: int
+    carId: int
+
+@app.post("/rentCar"):
+def create_rental(rental: Rental):
+    rental = query("INSERT INTO rental (longitude, latitude, fromDate, toDate, customerNr, carID) VALUES ("
+                   + rental.latitude ", " 
+                    + rental.longitude ", " 
+                      + rental.fromDate ", " 
+                      +  rental.toDate + ", " 
+                      +  rental.customerNr + ", " 
+                      +   rental.carId
+                      + ")")
