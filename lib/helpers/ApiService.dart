@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:mobileappdev/helpers/StorageHelper.dart'; // Import StorageHelper
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -21,6 +22,12 @@ class ApiService {
       };
     }
     return {'Content-Type': 'application/json'};
+  }
+
+  logoutIfNotAuthorized({httpStatusCode = int}) {
+    if (httpStatusCode == 401) {
+      StorageHelper().deleteToken();
+    }
   }
 
   Future<bool> _isConnected() async {
@@ -140,6 +147,7 @@ class ApiService {
       var headers = await _getHeaders();
       var response = await http.get(url, headers: headers);
 
+      logoutIfNotAuthorized();
       if (response.statusCode == 200) {
         var jsonData = json.decode(response.body);
         return jsonData['Dashboard'];
@@ -158,7 +166,7 @@ class ApiService {
     try {
       var headers = await _getHeaders();
       var response = await http.get(url, headers: headers);
-
+      logoutIfNotAuthorized();
       if (response.statusCode == 200) {
         var jsonData = json.decode(response.body);
         return jsonData['Rentals'];
@@ -177,7 +185,7 @@ class ApiService {
     try {
       var headers = await _getHeaders();
       var response = await http.get(url, headers: headers);
-
+      logoutIfNotAuthorized();
       if (response.statusCode == 200) {
         var jsonData = json.decode(response.body);
         return jsonData['Cars'];
@@ -196,7 +204,7 @@ class ApiService {
     try {
       var headers = await _getHeaders();
       var response = await http.get(url, headers: headers);
-
+      logoutIfNotAuthorized();
       if (response.statusCode == 200) {
         var jsonData = json.decode(response.body);
         return jsonData;
@@ -215,7 +223,7 @@ class ApiService {
     try {
       var headers = await _getHeaders();
       var response = await http.get(url, headers: headers);
-
+      logoutIfNotAuthorized();
       if (response.statusCode == 200) {
         var jsonData = json.decode(response.body);
         print(jsonData);
@@ -238,7 +246,7 @@ class ApiService {
     try {
       var headers = await _getHeaders();
       var response = await http.get(url, headers: headers);
-
+      logoutIfNotAuthorized();
       if (response.statusCode == 200) {
         var jsonData = json.decode(response.body);
         return jsonData;
@@ -264,7 +272,7 @@ class ApiService {
         },
         body: jsonEncode(profileData),
       );
-
+      logoutIfNotAuthorized();
       if (response.statusCode == 200) {
         return true;
       } else {

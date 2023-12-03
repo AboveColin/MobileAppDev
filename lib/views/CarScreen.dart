@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobileappdev/views/RentCarForm.dart';
 import '../helpers/ApiService.dart'; // Import ApiService
 
 class CarScreen extends StatelessWidget {
@@ -43,6 +44,7 @@ class CarScreen extends StatelessWidget {
                 buildDetailRow(
                     Icons.calendar_today, 'Year:', '${carData["modelYear"]}'),
                 buildDetailRow(Icons.category, 'Type:', '${carData["body"]}'),
+                const RentCarForm(),
               ],
             );
           } else if (snapshot.hasError) {
