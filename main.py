@@ -79,13 +79,8 @@ class Rental:
     customerNr: int
     carId: int
 
-@app.post("/rentCar"):
+
+@app.post("/rentCar")
 def create_rental(rental: Rental):
-    rental = query("INSERT INTO rental (longitude, latitude, fromDate, toDate, customerNr, carID) VALUES ("
-                   + rental.latitude ", " 
-                    + rental.longitude ", " 
-                      + rental.fromDate ", " 
-                      +  rental.toDate + ", " 
-                      +  rental.customerNr + ", " 
-                      +   rental.carId
-                      + ")")
+    query("INSERT INTO rental (longitude, latitude, fromDate, toDate, customerNr, carID) VALUES (" + rental.latitude + ", " + rental.longitude + ", " + rental.fromDate + ", " +  rental.toDate + ", " +  rental.customerNr + ", " + rental.carId + ")")
+
