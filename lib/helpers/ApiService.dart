@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:mobileappdev/helpers/StorageHelper.dart'; // Import StorageHelper
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -367,6 +366,56 @@ class ApiService {
       return true; // Password reset successful
     } else {
       return false; // Password reset failed
+    }
+  }
+
+  Future<bool> sendDamageReport(
+      {required String description,
+      required String image,
+      required int carID}) async {
+    var url = Uri.parse('$baseUrl/saveDamageReport');
+    try {
+      var headers = await _getHeaders();
+      var response = await http.post(
+        url,
+        headers: headers,
+        body: jsonEncode({
+          'description': description,
+          'image_url': image,
+          'car_id': carID,
+        }),
+      );
+      logoutIfNotAuthorized();
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        print('Failed to save damage report');
+        return false;
+      }
+    } catch (e) {
+      print('Error: $e');
+      return false;
+    }
+  }
+
+  Future<List<dynamic>> fetchDamageReports() async {
+    var url = Uri.parse('$baseUrl/getDamageReports');
+    try {
+      var headers = await _getHeaders();
+      var response = await http.get(url, headers: headers);
+      logoutIfNotAuthorized();
+      if (response.statusCode == 200) {
+        // print(response.body[0]);
+        var jsonData = json.decode(response.body);
+        print(jsonData);
+        return jsonData;
+      } else {
+        print('Failed to load data');
+        throw Exception('Failed to load data');
+      }
+    } catch (e) {
+      print('Error: $e');
+      throw Exception('Failed to load data');
     }
   }
 }

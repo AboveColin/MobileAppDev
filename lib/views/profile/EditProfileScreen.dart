@@ -134,7 +134,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const Text('Change Profile', style: TextStyle(fontSize: 20)),
+                    const Text('Change Profile',
+                        style: TextStyle(fontSize: 20)),
                     // Profile Update Form
                     Form(
                       key: _formKey,
@@ -142,7 +143,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         children: [
                           TextFormField(
                             initialValue: email,
-                            decoration: const InputDecoration(labelText: 'Email'),
+                            decoration:
+                                const InputDecoration(labelText: 'Email'),
                             onSaved: (value) => email = value ?? '',
                           ),
                           TextFormField(
@@ -153,7 +155,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           ),
                           TextFormField(
                             initialValue: lastName,
-                            decoration: const InputDecoration(labelText: 'Last Name'),
+                            decoration:
+                                const InputDecoration(labelText: 'Last Name'),
                             onSaved: (value) => lastName = value ?? '',
                           ),
                           InkWell(
@@ -161,8 +164,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             child: IgnorePointer(
                               child: TextFormField(
                                 initialValue: birthDate,
-                                decoration:
-                                    const InputDecoration(labelText: 'Birth Date'),
+                                decoration: const InputDecoration(
+                                    labelText: 'Birth Date'),
                                 onSaved: (value) => birthDate = value ?? '',
                               ),
                             ),
@@ -182,7 +185,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ),
                     const SizedBox(height: 30),
                     // Password Change Form
-                    const Text('Change Password', style: TextStyle(fontSize: 20)),
+                    const Text('Change Password',
+                        style: TextStyle(fontSize: 20)),
                     Form(
                       key: _formKeyP,
                       child: Column(

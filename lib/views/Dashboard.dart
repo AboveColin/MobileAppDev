@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../helpers/ApiService.dart'; // Import ApiService
+import '../helpers/ApiService.dart';
+import 'package:mobileappdev/views/DamageReportsOverviewScreen.dart';
 
 class DashboardScreen extends StatelessWidget {
   DashboardScreen({super.key});
@@ -58,6 +59,24 @@ class DashboardScreen extends StatelessWidget {
                       title: const Text('Active Rentals'),
                       trailing: Text('$activeRentals'),
                       leading: const Icon(Icons.car_rental),
+                    ),
+                  ),
+                  Card(
+                    margin: const EdgeInsets.all(8),
+                    child: ButtonBar(
+                      alignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        DamageReportsOverviewScreen()));
+                          },
+                          child: const Text('Reports'),
+                        )
+                      ],
                     ),
                   ),
                 ],

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mobileappdev/views/RentCarForm.dart';
-import '../helpers/ApiService.dart'; // Import ApiService
+import 'package:mobileappdev/views/DamageReportScreen.dart';
+import '../helpers/ApiService.dart';
+import 'package:mobileappdev/theme_config.dart';
 
 class CarScreen extends StatelessWidget {
   CarScreen({super.key, required this.id});
@@ -14,6 +16,7 @@ class CarScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Car Details'),
         centerTitle: true,
+        elevation: 2,
       ),
       body: FutureBuilder<Map<String, dynamic>>(
         future: _apiService.fetchCar(id),
@@ -21,18 +24,22 @@ class CarScreen extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.done &&
               snapshot.hasData) {
             var carData = snapshot.data!['Car'][0];
-            print(carData['image']);
             return ListView(
               padding: const EdgeInsets.all(16),
               children: [
-                carData[10] != null
-                    ? Hero(
-                        tag: carData['image'],
-                        child: Image.network(carData['image']))
-                    : const SizedBox(
-                        height: 200,
-                        child: Center(child: Text('No image available'))),
-                const SizedBox(height: 10),
+                carData['image'] != null
+                    ? Image.network(
+                        carData['image'],
+                        height: 250,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                      )
+                    : Container(
+                        height: 250,
+                        color: Colors.grey[200],
+                        child: const Center(child: Text('No image available')),
+                      ),
+                const SizedBox(height: 20),
                 buildDetailRow(Icons.confirmation_number, 'License Plate:',
                     '${carData["licensePlate"]}'),
                 buildDetailRow(
@@ -44,6 +51,26 @@ class CarScreen extends StatelessWidget {
                 buildDetailRow(
                     Icons.calendar_today, 'Year:', '${carData["modelYear"]}'),
                 buildDetailRow(Icons.category, 'Type:', '${carData["body"]}'),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DamageReportScreen(carID: id),
+                      ),
+                    );
+                  },
+                  child: const Text('Report Damage'),
+                  style: ElevatedButton.styleFrom(
+                    primary: ThemeConfig.secondaryColor,
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 15, horizontal: 20),
+                    textStyle: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                const SizedBox(height: 10),
                 const RentCarForm(),
               ],
             );
@@ -59,20 +86,31 @@ class CarScreen extends StatelessWidget {
 
   Widget buildDetailRow(IconData icon, String title, String value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: Colors.blue),
-          const SizedBox(width: 8),
+          Icon(icon, size: 28, color: ThemeConfig.primaryColor),
+          const SizedBox(width: 10),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title,
-                    style: const TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.bold)),
-                Text(value, style: const TextStyle(fontSize: 16)),
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black54,
+                  ),
+                ),
+                Text(
+                  value,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: Colors.black87,
+                  ),
+                ),
               ],
             ),
           ),

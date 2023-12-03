@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'CarScreen.dart';
 import '../helpers/ApiService.dart';
 import '../helpers/StorageHelper.dart';
+import 'package:mobileappdev/theme_config.dart';
 
 class CarList extends StatefulWidget {
   const CarList({super.key});
@@ -100,13 +101,17 @@ class _CarListState extends State<CarList> {
       appBar: AppBar(
         title: const Text('Available Cars'),
         centerTitle: true,
+        elevation: 4,
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(80.0),
-          child: Column(
-            children: [
-              _buildSearchBar(),
-              _buildFilterDropdown(),
-            ],
+          preferredSize: const Size.fromHeight(100.0),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                _buildSearchBar(),
+                _buildFilterDropdown(),
+              ],
+            ),
           ),
         ),
       ),
@@ -115,35 +120,14 @@ class _CarListState extends State<CarList> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done &&
               snapshot.hasData) {
-            var cars = filterCars(
-                snapshot.data!); // Hier wordt de filterCars methode toegepast
+            var cars = filterCars(snapshot.data!);
             return RefreshIndicator(
               onRefresh: _refreshData,
               child: ListView.builder(
                 itemCount: cars.length,
                 itemBuilder: (context, index) {
                   var car = cars[index];
-                  return Card(
-                    margin: const EdgeInsets.all(8.0),
-                    child: ListTile(
-                      leading: const Icon(Icons.directions_car),
-                      title: Text(
-                        '${car["brand"]} ${car["model"]}',
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      subtitle: Text(
-                          'License Plate: ${car["licensePlate"]} \nFuel: ${car["fuel"]}'),
-                      trailing: const Icon(Icons.arrow_forward_ios),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => CarScreen(id: car["ID"]),
-                          ),
-                        );
-                      },
-                    ),
-                  );
+                  return _buildCarCard(car);
                 },
               ),
             );
@@ -152,6 +136,34 @@ class _CarListState extends State<CarList> {
           } else {
             return const Center(child: CircularProgressIndicator());
           }
+        },
+      ),
+    );
+  }
+
+  Widget _buildCarCard(dynamic car) {
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      child: ListTile(
+        leading: Image.network(car["image"],
+            width: 100, height: 100, fit: BoxFit.cover),
+        title: Text(
+          '${car["brand"]} ${car["model"]}',
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        subtitle:
+            Text('License Plate: ${car["licensePlate"]}\nFuel: ${car["fuel"]}'),
+        trailing: const Icon(Icons.arrow_forward_ios,
+            color: ThemeConfig.primaryColor),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CarScreen(id: car["ID"]),
+            ),
+          );
         },
       ),
     );

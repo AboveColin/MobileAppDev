@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 // For animations
 import 'package:intl/intl.dart';
@@ -44,28 +46,23 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   }
 
   void _register() async {
-    print("a");
     String email = _emailController.text;
     String password = _passwordController.text;
     String lastName = _lastNameController.text;
     String firstName = _firstNameController.text;
     String birthDateString = DateFormat('yyyy-MM-dd').format(_birthDate);
-    print("b");
 
     if (email.isEmpty ||
         password.isEmpty ||
         lastName.isEmpty ||
         firstName.isEmpty) {
-      print("c");
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please fill in all fields')),
       );
-      print("d");
       return;
     }
 
     try {
-      print('Registering...');
       var response = await _apiService.registerUser(
         email: email,
         password: password,
@@ -75,8 +72,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       );
 
       if (response == true) {
-        print("e");
-        // ignore: use_build_context_synchronously
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -91,7 +86,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         );
       }
     } catch (e) {
-      print(e);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Registration failed: $e')),
       );
