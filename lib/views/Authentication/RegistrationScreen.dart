@@ -23,6 +23,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   DateTime _birthDate = DateTime.now();
   final ApiService _apiService = ApiService();
 
+  // ignore: unused_field
   bool _darkMode = false;
 
   void _updateTheme(bool isDarkMode) {

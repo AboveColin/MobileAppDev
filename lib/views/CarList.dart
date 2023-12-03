@@ -11,6 +11,28 @@ class CarList extends StatefulWidget {
   _CarListState createState() => _CarListState();
 }
 
+class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
+  final Widget child;
+
+  _SliverAppBarDelegate({required this.child});
+
+  @override
+  double get minExtent => 120; // Adjust these values as needed
+  @override
+  double get maxExtent => 120;
+
+  @override
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return child;
+  }
+
+  @override
+  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
+    return oldDelegate.child != child;
+  }
+}
+
 class _CarListState extends State<CarList> {
   late Future<List<dynamic>> carsFuture;
   final ApiService _apiService = ApiService();
@@ -63,100 +85,138 @@ class _CarListState extends State<CarList> {
   }
 
   Widget _buildSearchBar() {
-    return TextField(
-      controller: _searchController,
-      decoration: const InputDecoration(
-        hintText: 'Zoek auto',
-        suffixIcon: Icon(Icons.search),
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+      child: TextField(
+        controller: _searchController,
+        decoration: InputDecoration(
+          hintText: 'Search Car',
+          fillColor: Colors.white,
+          filled: true,
+          prefixIcon: const Icon(Icons.search, color: Colors.grey),
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30),
+            borderSide: BorderSide.none,
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30),
+            borderSide: BorderSide(color: Colors.grey.shade300),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30),
+            borderSide: BorderSide(color: Theme.of(context).primaryColor),
+          ),
+        ),
+        onChanged: (value) {
+          setState(() {
+            _searchQuery = value;
+          });
+        },
       ),
-      onChanged: (value) {
-        setState(() {
-          _searchQuery = value;
-        });
-      },
     );
   }
 
   Widget _buildFilterDropdown() {
-    return DropdownButton<String>(
-      value: _selectedFilter,
-      onChanged: (String? newValue) {
-        setState(() {
-          _selectedFilter = newValue!;
-        });
-      },
-      items: <String>['All', 'GASOLINE', 'DIESEL', 'ELECTRIC', 'HYBRID']
-          .map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(30),
+        border: Border.all(color: Colors.grey.shade300),
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          value: _selectedFilter,
+          icon: const Icon(Icons.arrow_drop_down, color: Colors.grey),
+          onChanged: (String? newValue) {
+            setState(() {
+              _selectedFilter = newValue!;
+            });
+          },
+          items: <String>['All', 'GASOLINE', 'DIESEL', 'ELECTRIC', 'HYBRID']
+              .map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value, style: TextStyle(color: Colors.grey[700])),
+            );
+          }).toList(),
+          style: const TextStyle(
+            fontSize: 16,
+            color: Colors.black,
+          ),
+          dropdownColor: Colors.white,
+          borderRadius: BorderRadius.circular(15),
+          elevation: 2,
+        ),
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Available Cars'),
-        centerTitle: true,
-        elevation: 4,
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(100.0),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                _buildSearchBar(),
-                _buildFilterDropdown(),
-              ],
+      body: CustomScrollView(
+        slivers: <Widget>[
+          const SliverAppBar(
+            title: Text('Available Cars'),
+            floating: true,
+            pinned: true,
+          ),
+          SliverPersistentHeader(
+            delegate: _SliverAppBarDelegate(
+              child: Container(
+                color: Colors.white,
+                child: Padding(
+                  padding: const EdgeInsets.all(0.0),
+                  child: Column(
+                    children: [
+                      _buildSearchBar(),
+                      _buildFilterDropdown(),
+                      // line
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            // pinned: true,
+          ),
+          SliverToBoxAdapter(
+            child: FutureBuilder<List<dynamic>>(
+              future: carsFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done &&
+                    snapshot.hasData) {
+                  var cars = filterCars(snapshot.data!);
+                  return ListView.builder(
+                    primary: false, // Important to work inside CustomScrollView
+                    shrinkWrap: true,
+                    itemCount: cars.length,
+                    itemBuilder: (context, index) {
+                      var car = cars[index];
+                      return _buildCarCard(car);
+                    },
+                  );
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else {
+                  return const Center(child: CircularProgressIndicator());
+                }
+              },
             ),
           ),
-        ),
-      ),
-      body: FutureBuilder<List<dynamic>>(
-        future: carsFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done &&
-              snapshot.hasData) {
-            var cars = filterCars(snapshot.data!);
-            return RefreshIndicator(
-              onRefresh: _refreshData,
-              child: ListView.builder(
-                itemCount: cars.length,
-                itemBuilder: (context, index) {
-                  var car = cars[index];
-                  return _buildCarCard(car);
-                },
-              ),
-            );
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else {
-            return const Center(child: CircularProgressIndicator());
-          }
-        },
+        ],
       ),
     );
   }
 
   Widget _buildCarCard(dynamic car) {
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      child: ListTile(
-        leading: Image.network(car["image"],
-            width: 100, height: 100, fit: BoxFit.cover),
-        title: Text(
-          '${car["brand"]} ${car["model"]}',
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
-        subtitle:
-            Text('License Plate: ${car["licensePlate"]}\nFuel: ${car["fuel"]}'),
-        trailing: const Icon(Icons.arrow_forward_ios,
-            color: ThemeConfig.primaryColor),
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: InkWell(
         onTap: () {
           Navigator.push(
             context,
@@ -165,6 +225,64 @@ class _CarListState extends State<CarList> {
             ),
           );
         },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Image section
+            ClipRRect(
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(12)),
+              child: car["image"] != null
+                  ? Image.network(
+                      car["image"],
+                      width: double.infinity,
+                      height: 100,
+                      fit: BoxFit.cover,
+                    )
+                  : Container(
+                      width: double.infinity,
+                      height: 100,
+                      color: ThemeConfig.primaryColor,
+                      child: const Icon(
+                        Icons.directions_car,
+                        size: 60,
+                        color: ThemeConfig.primaryColor,
+                      ),
+                    ),
+            ),
+            // Details section
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '${car["brand"]} ${car["model"]}',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'License Plate: ${car["licensePlate"]}',
+                    style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Fuel: ${car["fuel"]}',
+                    style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Price: €${car["pricePerHour"]}',
+                    style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

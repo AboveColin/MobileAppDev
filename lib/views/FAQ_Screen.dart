@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobileappdev/views/SupportTicketScreen.dart';
 
 class FAQScreen extends StatefulWidget {
   const FAQScreen({super.key});
@@ -17,7 +18,7 @@ class _FAQScreenState extends State<FAQScreen> {
       ),
       body: ListView(
         padding: const EdgeInsets.all(10),
-        children: const <Widget>[
+        children: <Widget>[
           FAQItem(
             question: "How do I reserve a car?",
             answer:
@@ -33,6 +34,20 @@ class _FAQScreenState extends State<FAQScreen> {
             answer:
                 "Yes, you can cancel your reservation free of charge up to 15 minutes before the scheduled start time.",
           ),
+          const SizedBox(height: 30),
+          // button to SupportTicketScreen
+          Center(
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => SupportTicketScreen()));
+              },
+              child: const Text('Contact Support'),
+            ),
+          ),
+
           // Add more FAQs here
         ],
       ),
