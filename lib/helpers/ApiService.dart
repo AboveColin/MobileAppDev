@@ -432,4 +432,32 @@ class ApiService {
       throw Exception('Failed to load data');
     }
   }
+
+  Future<bool> submitSupportTicket(String description) async {
+    String? token = await storageHelper.getToken();
+    if (token == null) return false; // Ensure user is logged in
+
+    var url = Uri.parse('$baseUrl/submitTicket');
+    try {
+      var response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({'description': description}),
+      );
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        logoutIfNotAuthorized(response.statusCode);
+        print('Failed to submit ticket');
+        print(response.body);
+        return false;
+      }
+    } catch (e) {
+      print('Error submitting ticket: $e');
+      return false;
+    }
+  }
 }
