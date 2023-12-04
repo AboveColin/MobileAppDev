@@ -1,8 +1,11 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:mobileappdev/helpers/StorageHelper.dart'; // Import StorageHelper
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:mobileappdev/main.dart';
+import 'package:mobileappdev/views/Authentication/LoginScreen.dart';
 
 class ApiService {
   final Connectivity _connectivity = Connectivity();
@@ -26,6 +29,11 @@ class ApiService {
   logoutIfNotAuthorized({httpStatusCode = int}) {
     if (httpStatusCode == 401) {
       StorageHelper().deleteToken();
+      navigatorKey.currentState?.push(MaterialPageRoute(
+        builder: (context) => LoginScreen(
+          onThemeChanged: (bool isDarkMode) {},
+        ),
+      ));
     }
   }
 
