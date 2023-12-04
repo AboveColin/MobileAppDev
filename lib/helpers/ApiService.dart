@@ -460,4 +460,118 @@ class ApiService {
       return false;
     }
   }
+
+  Future<bool> addFavoriteCar(int carID) async {
+    String? token = await storageHelper.getToken();
+    if (token == null) return false; // Ensure user is logged in
+
+    var url = Uri.parse('$baseUrl/addFavoriteCar');
+    try {
+      var response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({'carID': carID}),
+      );
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        logoutIfNotAuthorized(response.statusCode);
+        print('Failed to submit favorite car');
+        print(response.body);
+        return false;
+      }
+    } catch (e) {
+      print('Error submitting favorite car: $e');
+      return false;
+    }
+  }
+
+  Future<bool> removeFavoriteCar(int carID) async {
+    String? token = await storageHelper.getToken();
+    if (token == null) return false; // Ensure user is logged in
+
+    var url = Uri.parse('$baseUrl/removeFavoriteCar');
+    try {
+      var response = await http.delete(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({'carID': carID}),
+      );
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        logoutIfNotAuthorized(response.statusCode);
+        print('Failed to remove favorite car');
+        print(response.body);
+        return false;
+      }
+    } catch (e) {
+      print('Error removing favorite car: $e');
+      return false;
+    }
+  }
+
+  Future<List<dynamic>> fetchFavoriteCars() async {
+    String? token = await storageHelper.getToken();
+    if (token == null) return []; // Ensure user is logged in
+
+    var url = Uri.parse('$baseUrl/getFavoriteCars');
+    try {
+      var response = await http.get(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+      if (response.statusCode == 200) {
+        var jsonData = json.decode(response.body);
+        return jsonData['FavoriteCars'];
+      } else {
+        logoutIfNotAuthorized(response.statusCode);
+        print('Failed to fetch favorite cars');
+        print(response.body);
+        return [];
+      }
+    } catch (e) {
+      print('Error fetching favorite cars: $e');
+      return [];
+    }
+  }
+
+  Future<bool> isFavoriteCar(int carID) async {
+    String? token = await storageHelper.getToken();
+    if (token == null) return false; // Ensure user is logged in
+
+    var url = Uri.parse('$baseUrl/isFavoriteCar');
+    try {
+      var response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({'carID': carID}),
+      );
+
+      if (response.statusCode == 200) {
+        var jsonData = json.decode(response.body);
+        return jsonData['isFavorite'];
+      } else {
+        logoutIfNotAuthorized(response.statusCode);
+        print('Failed to fetch favorite cars');
+        print(response.body);
+        return false;
+      }
+    } catch (e) {
+      print('Error fetching favorite cars: $e');
+      return false;
+    }
+  }
 }

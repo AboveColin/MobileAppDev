@@ -82,6 +82,20 @@ class _CarListState extends State<CarList> {
     });
   }
 
+  void _toggleFavorite(dynamic car) async {
+    print(car);
+    bool success = car['is_favorite']
+        ? await _apiService.removeFavoriteCar(car['ID'])
+        : await _apiService.addFavoriteCar(car['ID']);
+
+    // If successful, update the UI
+    if (success) {
+      setState(() {
+        car['is_favorite'] = !car['is_favorite'];
+      });
+    }
+  }
+
   List<dynamic> filterCars(List<dynamic> cars) {
     List<dynamic> filteredCars = cars.where((car) {
       final brandModelMatch =
@@ -277,77 +291,96 @@ class _CarListState extends State<CarList> {
 
   Widget _buildCarCard(dynamic car) {
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: InkWell(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => CarScreen(id: car["ID"]),
-            ),
-          );
-        },
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Image section
-            ClipRRect(
-              borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(12)),
-              child: car["image"] != null
-                  ? Image.network(
-                      car["image"],
-                      width: double.infinity,
-                      height: 100,
-                      fit: BoxFit.cover,
-                    )
-                  : Container(
-                      width: double.infinity,
-                      height: 100,
-                      color: ThemeConfig.primaryColor,
-                      child: const Icon(
-                        Icons.directions_car,
-                        size: 60,
-                        color: ThemeConfig.primaryColor,
-                      ),
-                    ),
-            ),
-            // Details section
-            Padding(
-              padding: const EdgeInsets.all(12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '${car["brand"]} ${car["model"]}',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'License Plate: ${car["licensePlate"]}',
-                    style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'Fuel: ${car["fuel"]}',
-                    style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'Price: €${car["pricePerHour"]}',
-                    style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                  ),
-                ],
+        margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+        elevation: 4,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: InkWell(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CarScreen(id: car["ID"]),
               ),
-            ),
-          ],
-        ),
-      ),
-    );
+            );
+          },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Image section
+              ClipRRect(
+                borderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(12)),
+                child: car["image"] != null
+                    ? Image.network(
+                        car["image"],
+                        width: double.infinity,
+                        height: 150,
+                        fit: BoxFit.cover,
+                      )
+                    : Container(
+                        width: double.infinity,
+                        height: 100,
+                        color: ThemeConfig.primaryColor,
+                        child: const Icon(
+                          Icons.directions_car,
+                          size: 60,
+                          color: Colors.white,
+                        ),
+                      ),
+              ),
+
+              // Details section with heart icon
+              Padding(
+                padding: const EdgeInsets.all(12),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // Car details
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${car["brand"]} ${car["model"]}',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+                        Text(
+                          'License Plate: ${car["licensePlate"]}',
+                          style:
+                              TextStyle(fontSize: 14, color: Colors.grey[600]),
+                        ),
+                        Text(
+                          'Fuel: ${car["fuel"]}',
+                          style:
+                              TextStyle(fontSize: 14, color: Colors.grey[600]),
+                        ),
+                        Text(
+                          'Price: €${car["pricePerHour"]}',
+                          style:
+                              TextStyle(fontSize: 14, color: Colors.grey[600]),
+                        ),
+                      ],
+                    ),
+
+                    // Favorite (Heart) Icon
+                    IconButton(
+                      icon: Icon(
+                        car['is_favorite']
+                            ? Icons.favorite
+                            : Icons.favorite_border,
+                        color: car['is_favorite'] ? Colors.red : Colors.grey,
+                      ),
+                      onPressed: () {
+                        _toggleFavorite(car);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ));
   }
 }
