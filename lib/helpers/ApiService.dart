@@ -29,7 +29,7 @@ class ApiService {
   logoutIfNotAuthorized({httpStatusCode = int}) {
     if (httpStatusCode == 401) {
       StorageHelper().deleteToken();
-      navigatorKey.currentState?.push(MaterialPageRoute(
+      navigatorKey.currentState?.pushReplacement(MaterialPageRoute(
         builder: (context) => LoginScreen(
           onThemeChanged: (bool isDarkMode) {},
         ),
