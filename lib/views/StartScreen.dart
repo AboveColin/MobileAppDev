@@ -4,6 +4,7 @@ import 'package:mobileappdev/views/Authentication/LoginScreen.dart';
 import 'package:mobileappdev/views/Authentication/RegistrationScreen.dart';
 import 'package:mobileappdev/helpers/StorageHelper.dart';
 import 'package:mobileappdev/views/HomeScreen.dart';
+import 'package:mobileappdev/theme_config.dart';
 
 class StartScreen extends StatefulWidget {
   const StartScreen({super.key});
@@ -91,7 +92,7 @@ class _StartScreenState extends State<StartScreen> {
                       children: [
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            foregroundColor: Colors.blue,
+                            foregroundColor: ThemeConfig.primaryColor,
                             backgroundColor: Colors.white,
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 50, vertical: 15),
