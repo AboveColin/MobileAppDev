@@ -5,9 +5,7 @@ import 'package:mobileappdev/helpers/StorageHelper.dart';
 import 'package:mobileappdev/views/profile/EditProfileScreen.dart';
 
 class ProfileScreen extends StatefulWidget {
-  final Function(bool) onThemeChanged;
-
-  const ProfileScreen({super.key, required this.onThemeChanged});
+  const ProfileScreen({super.key});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -51,8 +49,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      SettingsScreen(onThemeChanged: widget.onThemeChanged),
+                  builder: (context) => SettingsScreen(),
                 ),
               );
             },
@@ -99,12 +96,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     // ignore: use_build_context_synchronously
                     Navigator.pushAndRemoveUntil(
                       context,
-                      MaterialPageRoute(
-                          builder: (context) => StartScreen(
-                                onThemeChanged: (bool) {
-                                  widget.onThemeChanged(bool);
-                                },
-                              )),
+                      MaterialPageRoute(builder: (context) => StartScreen()),
                       (Route<dynamic> route) => false,
                     );
                   },

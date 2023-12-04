@@ -3,13 +3,11 @@ import 'package:flutter_animator/flutter_animator.dart'; // Add this package for
 import 'package:mobileappdev/views/HomeScreen.dart';
 import 'package:mobileappdev/helpers/ApiService.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mobileappdev/helpers/StorageHelper.dart';
 import 'package:mobileappdev/views/Authentication/ForgotPasswordScreen.dart';
 import 'package:mobileappdev/theme_config.dart';
 
 class LoginScreen extends StatefulWidget {
-  final Function(bool) onThemeChanged;
-  const LoginScreen({super.key, required this.onThemeChanged});
+  const LoginScreen({super.key});
   @override
   // ignore: library_private_types_in_public_api
   _LoginScreenState createState() => _LoginScreenState();
@@ -20,28 +18,13 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
   final ApiService _apiService = ApiService();
 
-  // ignore: unused_field
-  bool _darkMode = false;
-
-  void _updateTheme(bool isDarkMode) {
-    setState(() {
-      _darkMode = isDarkMode;
-    });
-  }
-
   @override
   void initState() {
     super.initState();
     _loadSettings();
   }
 
-  Future<void> _loadSettings() async {
-    final preferencesService = StorageHelper();
-    final settings = await preferencesService.getSettings();
-    setState(() {
-      _darkMode = settings.darkMode;
-    });
-  }
+  Future<void> _loadSettings() async {}
 
   void _login() async {
     // Implement login logic using _apiService
@@ -72,9 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => MyHomePage(
-                onThemeChanged: _updateTheme,
-              ),
+              builder: (context) => MyHomePage(),
             ));
       } else {
         print(response);

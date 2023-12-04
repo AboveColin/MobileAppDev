@@ -26,13 +26,11 @@ class ApiService {
     return {'Content-Type': 'application/json'};
   }
 
-  logoutIfNotAuthorized({httpStatusCode = int}) {
+  logoutIfNotAuthorized([int? httpStatusCode]) {
     if (httpStatusCode == 401) {
       StorageHelper().deleteToken();
       navigatorKey.currentState?.pushReplacement(MaterialPageRoute(
-        builder: (context) => LoginScreen(
-          onThemeChanged: (bool isDarkMode) {},
-        ),
+        builder: (context) => const LoginScreen(),
       ));
     }
   }
@@ -154,11 +152,11 @@ class ApiService {
       var headers = await _getHeaders();
       var response = await http.get(url, headers: headers);
 
-      logoutIfNotAuthorized();
       if (response.statusCode == 200) {
         var jsonData = json.decode(response.body);
         return jsonData['Dashboard'];
       } else {
+        logoutIfNotAuthorized(response.statusCode);
         print('Failed to load data');
         throw Exception('Failed to load data');
       }
@@ -173,11 +171,12 @@ class ApiService {
     try {
       var headers = await _getHeaders();
       var response = await http.get(url, headers: headers);
-      logoutIfNotAuthorized();
+
       if (response.statusCode == 200) {
         var jsonData = json.decode(response.body);
         return jsonData['Rentals'];
       } else {
+        logoutIfNotAuthorized(response.statusCode);
         print('Failed to load data');
         throw Exception('Failed to load data');
       }
@@ -192,11 +191,12 @@ class ApiService {
     try {
       var headers = await _getHeaders();
       var response = await http.get(url, headers: headers);
-      logoutIfNotAuthorized();
+
       if (response.statusCode == 200) {
         var jsonData = json.decode(response.body);
         return jsonData['Cars'];
       } else {
+        logoutIfNotAuthorized(response.statusCode);
         print('Failed to load data');
         throw Exception('Failed to load data');
       }
@@ -211,11 +211,12 @@ class ApiService {
     try {
       var headers = await _getHeaders();
       var response = await http.get(url, headers: headers);
-      logoutIfNotAuthorized();
+
       if (response.statusCode == 200) {
         var jsonData = json.decode(response.body);
         return jsonData;
       } else {
+        logoutIfNotAuthorized(response.statusCode);
         print('Failed to load data');
         throw Exception('Failed to load data');
       }
@@ -230,7 +231,7 @@ class ApiService {
     try {
       var headers = await _getHeaders();
       var response = await http.get(url, headers: headers);
-      logoutIfNotAuthorized();
+
       if (response.statusCode == 200) {
         var jsonData = json.decode(response.body);
         print(jsonData);
@@ -238,6 +239,7 @@ class ApiService {
         print("data: ${jsonData['Customer']?[0]}");
         return jsonData['Customer']?[0];
       } else {
+        logoutIfNotAuthorized(response.statusCode);
         print('Failed to load data');
         throw Exception('Failed to load data');
       }
@@ -253,11 +255,12 @@ class ApiService {
     try {
       var headers = await _getHeaders();
       var response = await http.get(url, headers: headers);
-      logoutIfNotAuthorized();
+
       if (response.statusCode == 200) {
         var jsonData = json.decode(response.body);
         return jsonData;
       } else {
+        logoutIfNotAuthorized(response.statusCode);
         print('Failed to load data');
         throw Exception('Failed to load data');
       }
@@ -279,10 +282,11 @@ class ApiService {
         },
         body: jsonEncode(profileData),
       );
-      logoutIfNotAuthorized();
+
       if (response.statusCode == 200) {
         return true;
       } else {
+        logoutIfNotAuthorized(response.statusCode);
         print('Failed to update profile');
         return false;
       }
@@ -393,10 +397,11 @@ class ApiService {
           'car_id': carID,
         }),
       );
-      logoutIfNotAuthorized();
+
       if (response.statusCode == 200) {
         return true;
       } else {
+        logoutIfNotAuthorized(response.statusCode);
         print('Failed to save damage report');
         return false;
       }
@@ -411,13 +416,14 @@ class ApiService {
     try {
       var headers = await _getHeaders();
       var response = await http.get(url, headers: headers);
-      logoutIfNotAuthorized();
+
       if (response.statusCode == 200) {
         // print(response.body[0]);
         var jsonData = json.decode(response.body);
         print(jsonData);
         return jsonData;
       } else {
+        logoutIfNotAuthorized(response.statusCode);
         print('Failed to load data');
         throw Exception('Failed to load data');
       }

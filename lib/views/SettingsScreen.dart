@@ -1,23 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import '../helpers/StorageHelper.dart';
-import '../models/Settings.dart';
 
 class SettingsScreen extends StatefulWidget {
-  final Function(bool) onThemeChanged;
-
-  const SettingsScreen({super.key, required this.onThemeChanged});
+  const SettingsScreen({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
   _SettingsScreenState createState() => _SettingsScreenState();
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
   bool darkMode = false;
   final StorageHelper _preferencesService = StorageHelper();
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSettings();
+  }
+
+  void _loadSettings() async {
+    darkMode = await _preferencesService.getDarkModePreference();
+    setState(() {});
+  }
+
+  void _toggleDarkMode(bool value) {
+    setState(() {
+      darkMode = value;
+      _preferencesService.setDarkModePreference(value);
+    });
+  }
 
   void showNotification() async {
     print('showNotification');
@@ -43,28 +57,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    _populateFields();
-  }
-
-  void _populateFields() async {
-    final settingsJson = await _preferencesService.getSettings();
-    final settings = Settings.fromJson({
-      'darkMode': settingsJson.darkMode,
-    });
-    setState(() {
-      darkMode = settings.darkMode;
-    });
-  }
-
-  void _saveSettings(bool value) async {
-    final newSettings = Settings(darkMode: value);
-    await _preferencesService.saveSettings(newSettings);
-    widget.onThemeChanged(value);
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -75,12 +67,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           SwitchListTile(
             title: const Text('Dark Mode'),
             value: darkMode,
-            onChanged: (value) {
-              setState(() {
-                darkMode = value;
-              });
-              _saveSettings(value);
-            },
+            onChanged: _toggleDarkMode,
           ),
           ListTile(
             title: const Text('Account'),

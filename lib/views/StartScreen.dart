@@ -6,8 +6,7 @@ import 'package:mobileappdev/helpers/StorageHelper.dart';
 import 'package:mobileappdev/views/HomeScreen.dart';
 
 class StartScreen extends StatefulWidget {
-  final Function(bool) onThemeChanged;
-  const StartScreen({super.key, required this.onThemeChanged});
+  const StartScreen({super.key});
   @override
   // ignore: library_private_types_in_public_api
   _StartScreenState createState() => _StartScreenState();
@@ -38,19 +37,7 @@ class _StartScreenState extends State<StartScreen> {
     String? token = await storageHelper.getToken();
     if (token != null && mounted) {
       Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => MyHomePage(
-            onThemeChanged: (bool isDarkMode) {
-              if (mounted) {
-                setState(() {
-                  _darkMode = isDarkMode;
-                });
-              }
-            },
-          ),
-        ),
-      );
+          context, MaterialPageRoute(builder: (context) => MyHomePage()));
     }
   }
 
@@ -104,7 +91,8 @@ class _StartScreenState extends State<StartScreen> {
                       children: [
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            foregroundColor: Colors.blue, backgroundColor: Colors.white,
+                            foregroundColor: Colors.blue,
+                            backgroundColor: Colors.white,
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 50, vertical: 15),
                             shape: RoundedRectangleBorder(
@@ -118,15 +106,14 @@ class _StartScreenState extends State<StartScreen> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => LoginScreen(
-                                          onThemeChanged: widget.onThemeChanged,
-                                        )));
+                                    builder: (context) => LoginScreen()));
                           },
                         ),
                         const SizedBox(height: 15),
                         OutlinedButton(
                           style: OutlinedButton.styleFrom(
-                            foregroundColor: Colors.white, side: const BorderSide(color: Colors.white),
+                            foregroundColor: Colors.white,
+                            side: const BorderSide(color: Colors.white),
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 45, vertical: 15),
                             shape: RoundedRectangleBorder(

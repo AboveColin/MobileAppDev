@@ -7,8 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:mobileappdev/helpers/StorageHelper.dart';
 
 class MyHomePage extends StatefulWidget {
-  final Function(bool) onThemeChanged;
-  const MyHomePage({super.key, required this.onThemeChanged});
+  const MyHomePage({super.key});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -39,7 +38,7 @@ class _MyHomePageState extends State<MyHomePage> {
     DashboardScreen(),
     const CarList(),
     const MapScreen(),
-    ProfileScreen(onThemeChanged: widget.onThemeChanged),
+    const ProfileScreen(),
     const FAQScreen(),
   ];
 

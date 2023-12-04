@@ -1,26 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:mobileappdev/views/StartScreen.dart';
-import 'package:mobileappdev/views/Authentication/ResetPasswordScreen.dart'; // Import your ResetPasswordScreen
+import 'package:mobileappdev/views/Authentication/ResetPasswordScreen.dart';
+import 'package:mobileappdev/theme_config.dart';
+import 'package:mobileappdev/helpers/StorageHelper.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Local Notifications Setup
   var initializationSettingsAndroid =
       const AndroidInitializationSettings('@mipmap/ic_launcher');
   var initializationSettings =
       InitializationSettings(android: initializationSettingsAndroid);
-
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
-
   await flutterLocalNotificationsPlugin.initialize(
     initializationSettings,
     onDidReceiveNotificationResponse: (NotificationResponse response) async {
       if (response.payload != null) {
         print('Payload: ${response.payload}');
-        // Assuming you have a navigator key
-        // You need to pass this key to MaterialApp
         navigatorKey.currentState?.push(MaterialPageRoute(
           builder: (_) => ResetPasswordScreen(resetToken: response.payload!),
         ));
@@ -28,36 +28,31 @@ void main() async {
     },
   );
 
-  runApp(const MyApp());
+  final StorageHelper storageHelper = StorageHelper();
+  await storageHelper.getDarkModePreference();
+
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => storageHelper,
+      child: MyApp(),
+    ),
+  );
 }
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
-
-  @override
-  _MyAppState createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  bool _darkMode = false;
-
-  void _updateTheme(bool isDarkMode) {
-    if (mounted) {
-      setState(() {
-        _darkMode = isDarkMode;
-      });
-    }
-  }
-
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final storageHelper = Provider.of<StorageHelper>(context);
+
     return MaterialApp(
-      navigatorKey: navigatorKey, // Use the navigator key here
+      navigatorKey: navigatorKey,
       title: 'Automaat',
-      theme: _darkMode ? ThemeData.dark() : ThemeData.light(),
-      home: StartScreen(onThemeChanged: _updateTheme),
+      theme: ThemeConfig.lightTheme,
+      darkTheme: ThemeConfig.darkTheme,
+      themeMode: storageHelper.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+      home: StartScreen(),
     );
   }
 }

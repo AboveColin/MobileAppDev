@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 // For animations
 import 'package:intl/intl.dart';
 import 'package:mobileappdev/helpers/ApiService.dart';
-import 'package:mobileappdev/helpers/StorageHelper.dart';
 import 'package:mobileappdev/theme_config.dart';
 import 'package:mobileappdev/views/StartScreen.dart';
 
@@ -23,27 +22,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   DateTime _birthDate = DateTime.now();
   final ApiService _apiService = ApiService();
 
-  // ignore: unused_field
-  bool _darkMode = false;
-
-  void _updateTheme(bool isDarkMode) {
-    setState(() {
-      _darkMode = isDarkMode;
-    });
-  }
-
   @override
   void initState() {
     super.initState();
-    _loadSettings();
-  }
-
-  Future<void> _loadSettings() async {
-    final preferencesService = StorageHelper();
-    final settings = await preferencesService.getSettings();
-    setState(() {
-      _darkMode = settings.darkMode;
-    });
   }
 
   void _register() async {
@@ -75,10 +56,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       if (response == true) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(
-              builder: (context) => StartScreen(
-                    onThemeChanged: _updateTheme,
-                  )),
+          MaterialPageRoute(builder: (context) => StartScreen()),
         );
       } else {
         print(response);
