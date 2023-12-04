@@ -3,6 +3,7 @@ import '../SettingsScreen.dart';
 import '../StartScreen.dart';
 import 'package:mobileappdev/helpers/StorageHelper.dart';
 import 'package:mobileappdev/views/profile/EditProfileScreen.dart';
+import 'package:mobileappdev/views/PastRentalsScreen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -87,9 +88,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   style: const TextStyle(fontSize: 18, color: Colors.grey),
                 ),
                 const SizedBox(height: 20),
-
-                // put on bottom of screen
-                const SizedBox(height: 10),
+                ElevatedButton(
+                  onPressed: () {
+                    // Navigate to PastRentalsScreen
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PastRentalsScreen(),
+                      ),
+                    );
+                  },
+                  child: const Text('View Past Rentals'),
+                ),
+                const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () async {
                     await storageHelper.deleteToken();

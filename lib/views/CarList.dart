@@ -40,6 +40,18 @@ class _CarListState extends State<CarList> {
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
   String _selectedFilter = 'All';
+  String _selectedBodyType = 'All';
+  final List<String> _bodyTypes = [
+    'All',
+    'STATIONWAGON',
+    'SEDAN',
+    'HATCHBACK',
+    'MINIVAN',
+    'SUV',
+    'COUPE',
+    'TRUCK',
+    'CONVERTIBLE'
+  ];
 
   @override
   void initState() {
@@ -72,14 +84,15 @@ class _CarListState extends State<CarList> {
 
   List<dynamic> filterCars(List<dynamic> cars) {
     List<dynamic> filteredCars = cars.where((car) {
-      final searchMatch =
+      final brandModelMatch =
           car['brand'].toLowerCase().contains(_searchQuery.toLowerCase()) ||
               car['model'].toLowerCase().contains(_searchQuery.toLowerCase());
-      if (_selectedFilter == 'All') {
-        return searchMatch;
-      } else {
-        return searchMatch && car['fuel'] == _selectedFilter;
-      }
+      final fuelMatch =
+          _selectedFilter == 'All' || car['fuel'] == _selectedFilter;
+      final bodyTypeMatch =
+          _selectedBodyType == 'All' || car['body'] == _selectedBodyType;
+
+      return brandModelMatch && fuelMatch && bodyTypeMatch;
     }).toList();
     return filteredCars;
   }
@@ -154,6 +167,42 @@ class _CarListState extends State<CarList> {
     );
   }
 
+  Widget _buildBodyTypeDropdown() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(30),
+        border: Border.all(color: Colors.grey.shade300),
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          value: _selectedBodyType,
+          icon: const Icon(Icons.arrow_drop_down, color: Colors.grey),
+          onChanged: (String? newValue) {
+            setState(() {
+              _selectedBodyType = newValue!;
+              _refreshData(); // Refresh data to apply the new filter
+            });
+          },
+          items: _bodyTypes.map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value, style: TextStyle(color: Colors.grey[700])),
+            );
+          }).toList(),
+          style: const TextStyle(
+            fontSize: 16,
+            color: Colors.black,
+          ),
+          dropdownColor: Colors.white,
+          borderRadius: BorderRadius.circular(15),
+          elevation: 2,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -163,18 +212,33 @@ class _CarListState extends State<CarList> {
             title: Text('Available Cars'),
             floating: true,
             pinned: true,
+            snap: true,
+            expandedHeight: 10,
           ),
           SliverPersistentHeader(
             delegate: _SliverAppBarDelegate(
               child: Container(
                 color: Colors.white,
                 child: Padding(
-                  padding: const EdgeInsets.all(0.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: Column(
                     children: [
                       _buildSearchBar(),
-                      _buildFilterDropdown(),
-                      // line
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 8),
+                            child: Text('Fuel'),
+                          ),
+                          _buildFilterDropdown(),
+                          const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 8),
+                            child: Text('Body Type'),
+                          ),
+                          _buildBodyTypeDropdown(),
+                        ],
+                      ),
                     ],
                   ),
                 ),
@@ -190,7 +254,7 @@ class _CarListState extends State<CarList> {
                     snapshot.hasData) {
                   var cars = filterCars(snapshot.data!);
                   return ListView.builder(
-                    primary: false, // Important to work inside CustomScrollView
+                    primary: false,
                     shrinkWrap: true,
                     itemCount: cars.length,
                     itemBuilder: (context, index) {
