@@ -71,7 +71,7 @@ class CarScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 10),
-                const RentCarForm(),
+                RentCarForm(id: id),
               ],
             );
           } else if (snapshot.hasError) {

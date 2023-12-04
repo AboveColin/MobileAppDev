@@ -250,8 +250,8 @@ class ApiService {
     return null;
   }
 
-  Future<Map<String, dynamic>> fetchRental(int id) async {
-    var url = Uri.parse('$baseUrl/getRental/$id');
+  Future<Map<String, dynamic>> fetchRentalsFor(int id) async {
+    var url = Uri.parse('$baseUrl/getRentalsFor/$id');
     try {
       var headers = await _getHeaders();
       var response = await http.get(url, headers: headers);
