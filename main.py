@@ -447,13 +447,15 @@ def get_availability_for_date_range(dateFrom: str, dateTo: str, token: str = Dep
         raise credentials_exception
 
     query = """
-    SELECT c.ID, c.brand
+    SELECT c.licensePlate, c.ID, c.brand, c.model, c.fuel, c.options, c.engineSize, c.modelYear, c.since, c.body, image
     FROM car c
     JOIN rental r
     ON r.carId = c.id 
-    AND ((r.toDate < %s AND r.toDate < %s) 
+    WHERE ((r.toDate < %s AND r.toDate < %s) 
     OR 
-    (r.fromDate > %s AND r.fromDate > %s));
+    (r.fromDate > %s AND r.fromDate > %s))
+    OR ID not in (SELECT carID from rental)
+    GROUP BY ID;
     """
     params = (dateFrom, dateTo, dateFrom, dateTo)
     cars = query_db(query, params)
