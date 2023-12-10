@@ -57,7 +57,7 @@ class ApiService {
       'Nieuw wachtwoord!',
       'Hier is uw nieuwe wachtwoord!',
       generalNotificationDetails,
-      payload: token, // The reset token you want to pass
+      payload: token,
     );
   }
 
@@ -174,6 +174,7 @@ class ApiService {
 
       if (response.statusCode == 200) {
         var jsonData = json.decode(response.body);
+
         return jsonData['Rentals'];
       } else {
         logoutIfNotAuthorized(response.statusCode);
@@ -194,6 +195,7 @@ class ApiService {
 
       if (response.statusCode == 200) {
         var jsonData = json.decode(response.body);
+        print(jsonData);
         return jsonData['Cars'];
       } else {
         logoutIfNotAuthorized(response.statusCode);

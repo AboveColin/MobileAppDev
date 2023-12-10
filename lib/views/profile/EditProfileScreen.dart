@@ -1,4 +1,8 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mobileappdev/helpers/ApiService.dart';
 import 'package:mobileappdev/helpers/StorageHelper.dart';
 
@@ -25,6 +29,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _loadCurrentUserData();
   }
 
+  XFile? _image;
+  final ImagePicker _picker = ImagePicker();
+
+  Future<void> _pickImage() async {
+    final XFile? image =
+        await _picker.pickImage(source: ImageSource.gallery, imageQuality: 85);
+
+    setState(() {
+      _image = image;
+    });
+  }
+
   void _loadCurrentUserData() async {
     var userData = await _apiService.fetchCustomer();
     if (userData != null) {
@@ -43,12 +59,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   void _updateProfile() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
+      List<int> imageBytes = await _image!.readAsBytes();
+      String base64Image = base64Encode(imageBytes);
       bool result = await _apiService.updateProfile({
         'email': email,
         'first_name': firstName,
         'last_name': lastName,
         'birth_date': birthDate,
-        'profile_picture': profilePicture,
+        'profile_picture': base64Image,
       });
 
       if (result) {
@@ -170,11 +188,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               ),
                             ),
                           ),
-                          TextFormField(
-                            initialValue: profilePicture,
-                            decoration: const InputDecoration(
-                                labelText: 'Profile Picture URL'),
-                            onSaved: (value) => profilePicture = value ?? '',
+                          const SizedBox(height: 10),
+                          _image == null
+                              ? const Text('No image selected.')
+                              : Image.file(File(_image!.path)),
+                          ElevatedButton(
+                            onPressed: _pickImage,
+                            child: const Text('Pick Image'),
                           ),
                           ElevatedButton(
                             onPressed: _updateProfile,

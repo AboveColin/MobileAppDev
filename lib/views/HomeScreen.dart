@@ -35,11 +35,11 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   late final List<Widget> _widgetOptions = <Widget>[
-    DashboardScreen(),
     const CarList(),
     const MapScreen(),
     const ProfileScreen(),
     const FAQScreen(),
+    DashboardScreen(),
   ];
 
   @override
@@ -54,10 +54,6 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: themeData.colorScheme.surface,
         destinations: const <Widget>[
           NavigationDestination(
-            icon: Icon(Icons.dashboard),
-            label: 'Dashboard',
-          ),
-          NavigationDestination(
             icon: Icon(Icons.directions_car),
             label: 'Cars',
           ),
@@ -70,7 +66,11 @@ class _MyHomePageState extends State<MyHomePage> {
             label: 'Profile',
           ),
           NavigationDestination(
-              icon: Icon(Icons.question_mark_rounded), label: 'FAQ')
+              icon: Icon(Icons.question_mark_rounded), label: 'FAQ'),
+          NavigationDestination(
+            icon: Icon(Icons.dashboard),
+            label: 'Dashboard',
+          ),
         ],
         selectedIndex: _selectedIndex,
         indicatorColor: Colors.amber[800],

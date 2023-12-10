@@ -346,20 +346,44 @@ class _CarListState extends State<CarList> {
                             fontSize: 18,
                           ),
                         ),
-                        Text(
-                          'License Plate: ${car["licensePlate"]}',
-                          style:
-                              TextStyle(fontSize: 14, color: Colors.grey[600]),
+                        Row(
+                          children: [
+                            const Icon(Icons.confirmation_number,
+                                size: 14, color: Colors.grey),
+                            Text(
+                              'License Plate: ${car["licensePlate"]}',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                          ],
                         ),
-                        Text(
-                          'Fuel: ${car["fuel"]}',
-                          style:
-                              TextStyle(fontSize: 14, color: Colors.grey[600]),
+                        Row(
+                          children: [
+                            const Icon(Icons.local_gas_station,
+                                size: 14, color: Colors.grey),
+                            Text(
+                              'Fuel: ${car["fuel"]}',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                          ],
                         ),
-                        Text(
-                          'Price: €${car["pricePerHour"]}',
-                          style:
-                              TextStyle(fontSize: 14, color: Colors.grey[600]),
+                        Row(
+                          children: [
+                            const Icon(Icons.euro,
+                                size: 14, color: Colors.grey),
+                            Text(
+                              'Price: €${car["pricePerHour"]}',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),

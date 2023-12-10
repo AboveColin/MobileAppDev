@@ -10,6 +10,10 @@ class StorageHelper extends ChangeNotifier {
   // Getter for isDarkMode
   bool get isDarkMode => _isDarkMode;
 
+  Future<void> clearStorage() async {
+    await _storage.deleteAll();
+  }
+
   // Combined method to load and get the dark mode preference
   Future<bool> getDarkModePreference() async {
     String? darkMode = await _storage.read(key: 'darkMode');

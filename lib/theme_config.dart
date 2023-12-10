@@ -2,15 +2,14 @@ import 'package:flutter/material.dart';
 
 class ThemeConfig {
   static ThemeData lightTheme = ThemeData(
-    primaryColor: Colors.blue, // Example color
+    primaryColor: Colors.blue,
     brightness: Brightness.light,
     // Other light theme configurations
   );
 
   static ThemeData darkTheme = ThemeData(
-    primaryColor: Color(0xFF6C63FF), // Example color
+    primaryColor: const Color(0xFF6C63FF),
     brightness: Brightness.dark,
-    // Other dark theme configurations
   );
 
   static const Color primaryColor = Color(0xFF6C63FF);
