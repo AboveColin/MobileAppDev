@@ -432,6 +432,35 @@ def get_rentals_for_car(id: int, token: str = Depends(get_token)):
     rentals = query_db(query, params)
     return {"Rentals": rentals}
 
+@app.get("/getAvailableCarsOnDateRange/{dateFrom}/{dateTo}")
+def get_availability_for_date_range(dateFrom: str, dateTo: str, token: str = Depends(get_token)):
+    credentials_exception = HTTPException(
+            status_code=401,
+            detail="Could not validate credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    payload = decode_token(token)
+    if payload is None:
+        raise credentials_exception
+    username: str = payload.get("sub")
+    if username is None:
+        raise credentials_exception
+
+    query = """
+    SELECT c.licensePlate, c.ID, c.brand, c.model, c.fuel, c.options, c.engineSize, c.modelYear, c.since, c.body, image
+    FROM car c
+    JOIN rental r
+    ON r.carId = c.id 
+    WHERE ((r.toDate < %s AND r.toDate < %s) 
+    OR 
+    (r.fromDate > %s AND r.fromDate > %s))
+    OR ID not in (SELECT carID from rental)
+    GROUP BY ID;
+    """
+    params = (dateFrom, dateTo, dateFrom, dateTo)
+    cars = query_db(query, params)
+    return {"Cars": cars}
+
 @app.get("/getAvailabilityFor/{id}/{dateFrom}/{dateTo}")
 def get_availability_for_car(id: int, dateFrom: str, dateTo: str, token: str = Depends(get_token)):
     credentials_exception = HTTPException(

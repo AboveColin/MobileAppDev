@@ -208,6 +208,27 @@ class ApiService {
     }
   }
 
+  Future<List<dynamic>> fetchCarsOnDateRange(dateFrom, dateTo) async {
+    var url =
+        Uri.parse('$baseUrl/getAvailableCarsOnDateRange/$dateFrom/$dateTo');
+    try {
+      var headers = await _getHeaders();
+      var response = await http.get(url, headers: headers);
+
+      if (response.statusCode == 200) {
+        var jsonData = json.decode(response.body);
+        return jsonData['Cars'];
+      } else {
+        logoutIfNotAuthorized(response.statusCode);
+        print('Failed to load data');
+        throw Exception('Failed to load data');
+      }
+    } catch (e) {
+      print('Error: $e');
+      throw Exception('Failed to load data');
+    }
+  }
+
   Future<Map<String, dynamic>> fetchCar(int id) async {
     var url = Uri.parse('$baseUrl/getCar/$id');
     try {
