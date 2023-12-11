@@ -112,13 +112,14 @@ class _CarListState extends State<CarList> {
   }
 
   Widget _buildSearchBar() {
+    var themeData = Theme.of(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
       child: TextField(
         controller: _searchController,
         decoration: InputDecoration(
           hintText: 'Search Car',
-          fillColor: Colors.white,
+          fillColor: themeData.colorScheme.surface,
           filled: true,
           prefixIcon: const Icon(Icons.search, color: Colors.grey),
           contentPadding:
@@ -146,10 +147,11 @@ class _CarListState extends State<CarList> {
   }
 
   Widget _buildFilterDropdown() {
+    var themeData = Theme.of(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: themeData.colorScheme.surface,
         borderRadius: BorderRadius.circular(30),
         border: Border.all(color: Colors.grey.shade300),
       ),
@@ -166,14 +168,14 @@ class _CarListState extends State<CarList> {
               .map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(
               value: value,
-              child: Text(value, style: TextStyle(color: Colors.grey[700])),
+              child: Text(value, style: const TextStyle(color: Colors.white)),
             );
           }).toList(),
           style: const TextStyle(
             fontSize: 16,
             color: Colors.black,
           ),
-          dropdownColor: Colors.white,
+          dropdownColor: themeData.colorScheme.surface,
           borderRadius: BorderRadius.circular(15),
           elevation: 2,
         ),
@@ -182,10 +184,11 @@ class _CarListState extends State<CarList> {
   }
 
   Widget _buildBodyTypeDropdown() {
+    var themeData = Theme.of(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: themeData.colorScheme.surface,
         borderRadius: BorderRadius.circular(30),
         border: Border.all(color: Colors.grey.shade300),
       ),
@@ -202,14 +205,14 @@ class _CarListState extends State<CarList> {
           items: _bodyTypes.map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(
               value: value,
-              child: Text(value, style: TextStyle(color: Colors.grey[700])),
+              child: Text(value, style: const TextStyle(color: Colors.white)),
             );
           }).toList(),
           style: const TextStyle(
             fontSize: 16,
             color: Colors.black,
           ),
-          dropdownColor: Colors.white,
+          dropdownColor: themeData.colorScheme.surface,
           borderRadius: BorderRadius.circular(15),
           elevation: 2,
         ),
@@ -219,6 +222,7 @@ class _CarListState extends State<CarList> {
 
   @override
   Widget build(BuildContext context) {
+    var themeData = Theme.of(context);
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
@@ -232,7 +236,7 @@ class _CarListState extends State<CarList> {
           SliverPersistentHeader(
             delegate: _SliverAppBarDelegate(
               child: Container(
-                color: Colors.white,
+                color: themeData.colorScheme.surface,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: Column(

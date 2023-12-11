@@ -5,6 +5,7 @@ import 'package:mobileappdev/helpers/StorageHelper.dart';
 import 'package:mobileappdev/views/profile/EditProfileScreen.dart';
 import 'package:mobileappdev/views/PastRentalsScreen.dart';
 import 'package:mobileappdev/theme_config.dart';
+import 'package:mobileappdev/views/paymentsScreen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -116,6 +117,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
             _buildProfileDetail(
                 'Birthdate', '${customerData?['birthDate'] ?? "Loading..."}'),
             const SizedBox(height: 20),
+            _buildActionButton(
+              "Past Payments",
+              () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PastPaymentsScreen(),
+                  ),
+                );
+              },
+            ),
             _buildActionButton(
                 'View Past Rentals',
                 () => Navigator.of(context).push(

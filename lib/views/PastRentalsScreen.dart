@@ -82,20 +82,33 @@ class _PastRentalsScreenState extends State<PastRentalsScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Rental Code: ${rental["code"]}',
+                  'Car: ',
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
                   ),
                 ),
                 const SizedBox(height: 8),
+                Text("Rental Code: ${rental["code"]}"),
+                Row(
+                  children: [
+                    Text("Status: "),
+                    Text(
+                      '${rental["RentalState"]}',
+                      style: TextStyle(
+                          fontSize: 14,
+                          color: {
+                                'ACTIVE': Colors.green,
+                                'CANCELLED': Colors.red,
+                                'RETURNED': Colors.blue,
+                              }[rental["RentalState"]] ??
+                              Colors.grey[600]),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
                 Text(
                   'From: ${DateFormat('yyyy-MM-dd').format(DateTime.parse(rental['fromDate']))} To: ${DateFormat('yyyy-MM-dd').format(DateTime.parse(rental['toDate']))}',
-                  style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  'Status: ${rental["RentalState"]}',
                   style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                 ),
               ],
