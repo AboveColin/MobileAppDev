@@ -168,7 +168,8 @@ class _CarListState extends State<CarList> {
               .map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(
               value: value,
-              child: Text(value, style: const TextStyle(color: Colors.white)),
+              child: Text(value,
+                  style: TextStyle(color: Theme.of(context).primaryColor)),
             );
           }).toList(),
           style: const TextStyle(
@@ -205,7 +206,8 @@ class _CarListState extends State<CarList> {
           items: _bodyTypes.map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(
               value: value,
-              child: Text(value, style: const TextStyle(color: Colors.white)),
+              child: Text(value,
+                  style: TextStyle(color: Theme.of(context).primaryColor)),
             );
           }).toList(),
           style: const TextStyle(

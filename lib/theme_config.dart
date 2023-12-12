@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 class ThemeConfig {
   static ThemeData lightTheme = ThemeData(
     primaryColor: Colors.blue,
+    cardColor: Colors.black,
     brightness: Brightness.light,
     // Other light theme configurations
   );
 
   static ThemeData darkTheme = ThemeData(
     primaryColor: const Color(0xFF6C63FF),
+    cardColor: Colors.white,
     brightness: Brightness.dark,
   );
 

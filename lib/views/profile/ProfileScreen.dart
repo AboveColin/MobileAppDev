@@ -66,6 +66,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  Widget FloatingButton() {
+    return FloatingActionButton(
+      onPressed: () => Navigator.of(context)
+          .push(MaterialPageRoute(builder: (_) => const EditProfileScreen())),
+      tooltip: 'Edit Profile',
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+      child: const Icon(Icons.edit),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -85,14 +95,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ? const Center(child: CircularProgressIndicator())
             : _buildProfileContent(),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.of(context)
-            .push(MaterialPageRoute(builder: (_) => const EditProfileScreen())),
-        tooltip: 'Edit Profile',
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-        child: const Icon(Icons.edit),
-      ),
+      floatingActionButton: FloatingButton(),
     );
   }
 
@@ -100,42 +103,134 @@ class _ProfileScreenState extends State<ProfileScreen> {
     var profileImage =
         customerData?['profilePicture'] ?? 'https://picsum.photos/200';
     return SingleChildScrollView(
-      physics: const AlwaysScrollableScrollPhysics(),
-      child: Center(
+        physics: const AlwaysScrollableScrollPhysics(),
+        child: Container(
+          width: MediaQuery.sizeOf(context).width,
+          height: 160,
+          decoration: BoxDecoration(
+            color: ThemeConfig.secondaryColor,
+          ),
+          child: Padding(
+            padding: EdgeInsetsDirectional.fromSTEB(20, 40, 20, 0),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Card(
+                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                  color: ThemeConfig.primaryColor,
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(60),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(2, 2, 2, 2),
+                    child: Container(
+                        width: 70,
+                        height: 70,
+                        clipBehavior: Clip.antiAlias,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                        ),
+                        child: Image.network(profileImage, fit: BoxFit.cover)),
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(8, 0, 0, 0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${customerData?['firstName'] ?? ""} ${customerData?['lastName'] ?? "Loading..."}',
+                        ),
+                        Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
+                          child: Text(
+                            '${customerData?['email'] ?? "Loading..."}',
+                          ),
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              '${customerData?['birthDate'] ?? "Loading..."}',
+                            ),
+                          ],
+                        ),
+                        // const SizedBox(height: 100),
+                        // _buildProfileInfo(),
+                        // _buildActionsSection(),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        )
+
+        // Column(
+        //   children: <Widget>[
+        //     const SizedBox(height: 20),
+        //     CircleAvatar(
+        //       radius: 50,
+        //       backgroundImage: NetworkImage(profileImage),
+        //     ),
+        //     const SizedBox(height: 10),
+        //     Text(
+        //       '${customerData?['firstName'] ?? ""} ${customerData?['lastName'] ?? "Loading..."}',
+        //       style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+        //     ),
+        //     Text(
+        //       '${customerData?['email'] ?? "Loading..."}',
+        //       style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+        //     ),
+        //     const SizedBox(height: 20),
+        //     _buildProfileInfo(),
+        //     _buildActionsSection(),
+        //   ],
+        // ),
+        );
+  }
+
+  Widget _buildProfileInfo() {
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            const SizedBox(height: 20),
-            CircleAvatar(
-                radius: 50, backgroundImage: NetworkImage(profileImage)),
-            const SizedBox(height: 10),
-            _buildProfileDetail('Name',
-                '${customerData?['firstName'] ?? ""} ${customerData?['lastName'] ?? "Loading..."}'),
-            _buildProfileDetail(
-                'Email', '${customerData?['email'] ?? "Loading..."}'),
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
             _buildProfileDetail(
                 'Birthdate', '${customerData?['birthDate'] ?? "Loading..."}'),
-            const SizedBox(height: 20),
-            _buildActionButton(
-              "Past Payments",
-              () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => PastPaymentsScreen(),
-                  ),
-                );
-              },
-            ),
-            _buildActionButton(
-                'View Past Rentals',
-                () => Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => PastRentalsScreen()))),
-            const SizedBox(height: 20),
-            _buildActionButton('Logout', _logout),
+            const Divider(),
+            // Additional details here if any
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildActionsSection() {
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        children: [
+          _buildActionButton(
+            "Past Payments",
+            () => Navigator.push(context,
+                MaterialPageRoute(builder: (context) => PastPaymentsScreen())),
+          ),
+          _buildActionButton(
+            "View Past Rentals",
+            () => Navigator.push(context,
+                MaterialPageRoute(builder: (context) => PastRentalsScreen())),
+          ),
+          _buildActionButton("Logout", _logout),
+        ],
       ),
     );
   }
