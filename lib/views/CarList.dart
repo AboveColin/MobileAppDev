@@ -394,7 +394,6 @@ class _CarListState extends State<CarList> {
                       ],
                     ),
 
-                    // Favorite (Heart) Icon
                     IconButton(
                       icon: Icon(
                         car['is_favorite']

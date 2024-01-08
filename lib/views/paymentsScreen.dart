@@ -85,8 +85,7 @@ class _PastPaymentsScreenState extends State<PastPaymentsScreen> {
               itemBuilder: (context, index) {
                 final payment = pastPayments[index];
                 return ListTile(
-                  leading: Icon(Icons.payment,
-                      size: 40), // Replace with your image asset
+                  leading: Icon(Icons.payment, size: 40),
                   title: Text(
                     DateFormat('yMMMd').format(payment.date),
                     style: TextStyle(fontSize: 16),
@@ -112,7 +111,6 @@ class _PastPaymentsScreenState extends State<PastPaymentsScreen> {
                       ),
                     ],
                   ),
-
                   trailing: Text(
                     "€${payment.amount.toStringAsFixed(2)}",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),

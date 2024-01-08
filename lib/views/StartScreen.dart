@@ -13,16 +13,31 @@ class StartScreen extends StatefulWidget {
   _StartScreenState createState() => _StartScreenState();
 }
 
-class _StartScreenState extends State<StartScreen> {
+class _StartScreenState extends State<StartScreen>
+    with SingleTickerProviderStateMixin {
   final StorageHelper storageHelper = StorageHelper();
   // ignore: unused_field
   bool _darkMode = false;
+  late AnimationController _animationController;
+  late Animation _animation;
+  bool _isSmokeVisible = false;
 
   @override
   void initState() {
     super.initState();
     _checkIfLoggedIn();
     _loadSettings();
+    _animationController = AnimationController(
+      duration: const Duration(seconds: 2),
+      vsync: this,
+    );
+    _animation = Tween(begin: 0.0, end: -450.0).animate(_animationController);
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
   }
 
   Future<void> _loadSettings() async {
@@ -69,7 +84,44 @@ class _StartScreenState extends State<StartScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Image.asset('assets/logo.png', height: 120.0),
+                        GestureDetector(
+                          onTap: () {
+                            _animationController.forward();
+                            setState(() {
+                              _isSmokeVisible = true;
+                            });
+                          },
+                          child: AnimatedBuilder(
+                            animation: _animationController,
+                            builder: (BuildContext context, Widget? child) {
+                              return Transform.translate(
+                                offset: Offset(_animation.value, 0),
+                                child: Stack(
+                                  children: [
+                                    // Smoke Image
+                                    Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          // blank space to align smoke
+                                          const SizedBox(width: 130),
+                                          Image.asset('assets/logo.png',
+                                              height: 120.0),
+                                          Visibility(
+                                            visible: _isSmokeVisible,
+                                            child: Image.asset(
+                                                'assets/smoke.png',
+                                                height: 120.0),
+                                          )
+                                        ])
+
+                                    // Car Image
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        ),
                         const SizedBox(height: 20, width: double.infinity),
                         const Text(
                           'Welcome to Automaat!',
