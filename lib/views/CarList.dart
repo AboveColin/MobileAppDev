@@ -19,7 +19,7 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   @override
   double get minExtent => 120; // Adjust these values as needed
   @override
-  double get maxExtent => 120;
+  double get maxExtent => 180;
 
   @override
   Widget build(
@@ -259,6 +259,27 @@ class _CarListState extends State<CarList> {
                           _buildBodyTypeDropdown(),
                         ],
                       ),
+                      Row(
+                        children: [
+                          OutlinedButton(
+                              onPressed: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return Dialog(
+                                        child: Container(
+                                          child: DateRangePickerDialog(
+                                              firstDate: DateTime.now(),
+                                              lastDate:
+                                                  DateTime.utc(2023, 12, 31),
+                                              currentDate: DateTime.now()),
+                                        ),
+                                      );
+                                    });
+                              },
+                              child: Text("Pick dates"))
+                        ],
+                      )
                     ],
                   ),
                 ),
