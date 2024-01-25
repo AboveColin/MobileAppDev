@@ -1,9 +1,9 @@
-import 'package:mobileappdev/views/Dashboard.dart';
 import 'MapScreen.dart';
 import 'package:mobileappdev/views/profile/ProfileScreen.dart';
 import 'CarList.dart';
 import 'FAQ_Screen.dart';
 import 'package:flutter/material.dart';
+import 'CurrentRentals.dart';
 import 'package:mobileappdev/helpers/StorageHelper.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -37,9 +37,9 @@ class _MyHomePageState extends State<MyHomePage> {
   late final List<Widget> _widgetOptions = <Widget>[
     const CarList(),
     const MapScreen(),
+    CurrentRentals(),
     const ProfileScreen(),
     const FAQScreen(),
-    DashboardScreen(),
   ];
 
   @override
@@ -62,15 +62,17 @@ class _MyHomePageState extends State<MyHomePage> {
             label: 'Map',
           ),
           NavigationDestination(
+            icon: Icon(Icons.dashboard),
+            label: 'Rental',
+          ),
+          NavigationDestination(
             icon: Icon(Icons.person),
             label: 'Profile',
           ),
           NavigationDestination(
-              icon: Icon(Icons.question_mark_rounded), label: 'FAQ'),
-          NavigationDestination(
-            icon: Icon(Icons.dashboard),
-            label: 'Dashboard',
-          ),
+              icon: Icon(Icons.question_mark_rounded),
+              label: "FAQ",
+          )
         ],
         selectedIndex: _selectedIndex,
         indicatorColor: Colors.amber[800],
