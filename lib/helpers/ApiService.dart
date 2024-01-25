@@ -636,8 +636,6 @@ class ApiService {
           'carId': carID,
           'fromDate': dateFrom,
           'toDate': dateTo,
-          'latitude': latlong[0],
-          'longitude': latlong[1],
         }),
       );
 
