@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../helpers/ApiService.dart';
 
 // Define a custom Form widget.
@@ -47,61 +48,76 @@ class RentCarFormState extends State<RentCarForm> {
     }
   }
 
+  String _formatDate(DateTime date) {
+    return DateFormat('yyyy-MM-dd').format(date);
+  }
+
   @override
   Widget build(BuildContext context) {
     // Build a Form widget using the _formKey created above.
-    return FutureBuilder<Map<String, dynamic>>(
-        future: _apiService.fetchRentalsFor(widget.id),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done &&
-              snapshot.hasData) {
-            var rentals = snapshot.data!;
-            print(rentals);
-            return Form(
-              key: _formKey,
-              child: Column(
-                children: <Widget>[
-                  Padding(padding: const EdgeInsets.all(80.0)),
-                  ElevatedButton(
-                    onPressed: () => _selectDateRange(context),
-                    child: Text('Select Date Range'),
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text('Rent Car'),
+        ),
+        body: FutureBuilder<Map<String, dynamic>>(
+            future: _apiService.fetchRentalsFor(widget.id),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done &&
+                  snapshot.hasData) {
+                var rentals = snapshot.data!;
+                print(rentals);
+                return Form(
+                  key: _formKey,
+                  child: Column(
+                    children: <Widget>[
+                      Padding(padding: const EdgeInsets.all(80.0)),
+                      ElevatedButton(
+                        onPressed: () => _selectDateRange(context),
+                        child: Text('Select Date Range'),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                            'Selected date range: ${_formatDate(_startDate)} - ${_formatDate(_endDate)}'),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            if (_formKey.currentState!.validate()) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text('Processing Data')),
+                              );
+                              // Send the picked date range to the rentCar method
+                              var rented = _apiService.rentCar(widget.id,
+                                  _startDate.toString(), _endDate.toString());
+                              if (await rented) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text('Car rented successfully')),
+                                );
+                                Navigator.pop(context);
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text('Error renting car')),
+                                );
+                              }
+                            }
+                          },
+                          child: const Text('Submit'),
+                        ),
+                      ),
+                    ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        if (_formKey.currentState!.validate()) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Processing Data')),
-                          );
-                          // Send the picked date range to the rentCar method
-                          var rented = _apiService.rentCar(widget.id,
-                              _startDate.toString(), _endDate.toString());
-                          if (await rented) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content: Text('Car rented successfully')),
-                            );
-                            Navigator.pop(context);
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content: Text('Error renting car')),
-                            );
-                          }
-                        }
-                      },
-                      child: const Text('Submit'),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error loading data: ${snapshot.error}'));
-          } else {
-            return const Center(child: CircularProgressIndicator());
-          }
-        });
+                );
+              } else if (snapshot.hasError) {
+                return Center(
+                    child: Text('Error loading data: ${snapshot.error}'));
+              } else {
+                return const Center(child: CircularProgressIndicator());
+              }
+            }));
   }
 }

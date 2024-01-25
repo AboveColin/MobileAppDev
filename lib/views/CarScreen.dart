@@ -42,7 +42,7 @@ class CarScreen extends StatelessWidget {
                       tag: 'carImage$id',
                       child: carData['image'] != null
                           ? FadeInImage.assetNetwork(
-                              placeholder: 'assets/placeholder.jpg',
+                              placeholder: 'assets/logo.png',
                               image: carData['image'],
                               height: 250,
                               width: double.infinity,
