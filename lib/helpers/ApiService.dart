@@ -187,6 +187,27 @@ class ApiService {
     }
   }
 
+  Future<List<dynamic>> fetchMapRentals() async {
+    var url = Uri.parse('$baseUrl/getMapRentals');
+    try {
+      var headers = await _getHeaders();
+      var response = await http.get(url, headers: headers);
+
+      if (response.statusCode == 200) {
+        var jsonData = json.decode(response.body);
+
+        return jsonData['Rentals'];
+      } else {
+        logoutIfNotAuthorized(response.statusCode);
+        print('Failed to load data');
+        throw Exception('Failed to load data');
+      }
+    } catch (e) {
+      print('Error: $e');
+      throw Exception('Failed to load data');
+    }
+  }
+
   Future<List<dynamic>> fetchCars() async {
     var url = Uri.parse('$baseUrl/getCars');
     try {
@@ -594,6 +615,87 @@ class ApiService {
       }
     } catch (e) {
       print('Error fetching favorite cars: $e');
+      return false;
+    }
+  }
+
+  Future<bool> rentCar(
+      int carID, String dateFrom, String dateTo, latlong) async {
+    String? token = await storageHelper.getToken();
+    if (token == null) return false; // Ensure user is logged in
+
+    var url = Uri.parse('$baseUrl/rentCar');
+    try {
+      var response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({
+          'carId': carID,
+          'fromDate': dateFrom,
+          'toDate': dateTo,
+          'latitude': latlong[0],
+          'longitude': latlong[1],
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        print(response.body);
+        return true;
+      } else {
+        logoutIfNotAuthorized(response.statusCode);
+        print('Failed to rent car');
+        print(response.body);
+        return false;
+      }
+    } catch (e) {
+      print('Error renting car: $e');
+      return false;
+    }
+  }
+
+  Future<Map<String, dynamic>> fetchCurrentRental() async {
+    var rentals = await fetchRentals();
+
+    return rentals
+        .where((rental) => rental['RentalState'] == 'ACTIVE')
+        .toList()[0];
+  }
+
+  Future<bool> returnCar(int carID, kmStand, longlat) async {
+    String? token = await storageHelper.getToken();
+    if (token == null) return false; // Ensure user is logged in
+
+    var url = Uri.parse('$baseUrl/returnCar');
+    try {
+      // convert kmStand to int
+      kmStand = int.parse(kmStand);
+      var response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({
+          'carID': carID,
+          'kmStand': kmStand,
+          'latitude': longlat[0],
+          'longitude': longlat[1],
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        logoutIfNotAuthorized(response.statusCode);
+        print('Failed to return car');
+        print(response.body);
+        return false;
+      }
+    } catch (e) {
+      print('Error returning car: $e');
       return false;
     }
   }
