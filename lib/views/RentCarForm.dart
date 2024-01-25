@@ -25,6 +25,28 @@ class RentCarFormState extends State<RentCarForm> {
 
   final ApiService _apiService = ApiService();
 
+  DateTime _startDate = DateTime.now();
+  DateTime _endDate = DateTime.now().add(Duration(days: 1));
+
+  // Function to show date range picker and handle the result
+  Future<void> _selectDateRange(BuildContext context) async {
+    final DateTimeRange? picked = await showDateRangePicker(
+      context: context,
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(const Duration(days: 365)),
+      initialDateRange: DateTimeRange(start: _startDate, end: _endDate),
+      // Other properties...
+    );
+
+    if (picked != null &&
+        picked != DateTimeRange(start: _startDate, end: _endDate)) {
+      setState(() {
+        _startDate = picked.start;
+        _endDate = picked.end;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // Build a Form widget using the _formKey created above.
@@ -39,25 +61,34 @@ class RentCarFormState extends State<RentCarForm> {
               key: _formKey,
               child: Column(
                 children: <Widget>[
-                  DateRangePickerDialog(
-                    currentDate: DateTime.now(),
-                    firstDate: DateTime.now(),
-                    lastDate: DateTime.utc(2023, 31, 12),
-                    fieldStartLabelText: "From",
-                    fieldEndLabelText: "To",
-                    helpText: "Rent car between: ",
+                  Padding(padding: const EdgeInsets.all(80.0)),
+                  ElevatedButton(
+                    onPressed: () => _selectDateRange(context),
+                    child: Text('Select Date Range'),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     child: ElevatedButton(
-                      onPressed: () {
-                        // Validate returns true if the form is valid, or false otherwise.
+                      onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          // If the form is valid, display a snackbar. In the real world,
-                          // you'd often call a server or save the information in a database.
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('Processing Data')),
                           );
+                          // Send the picked date range to the rentCar method
+                          var rented = _apiService.rentCar(widget.id,
+                              _startDate.toString(), _endDate.toString());
+                          if (await rented) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text('Car rented successfully')),
+                            );
+                            Navigator.pop(context);
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text('Error renting car')),
+                            );
+                          }
                         }
                       },
                       child: const Text('Submit'),

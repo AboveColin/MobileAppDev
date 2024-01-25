@@ -619,8 +619,7 @@ class ApiService {
     }
   }
 
-  Future<bool> rentCar(
-      int carID, String dateFrom, String dateTo, latlong) async {
+  Future<bool> rentCar(int carID, String dateFrom, String dateTo) async {
     String? token = await storageHelper.getToken();
     if (token == null) return false; // Ensure user is logged in
 

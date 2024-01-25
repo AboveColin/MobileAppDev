@@ -20,7 +20,10 @@ class CarScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Implement action like Rent this Car
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => RentCarForm(id: id)),
+          );
         },
         child: const Icon(Icons.directions_car),
         backgroundColor: ThemeConfig.primaryColor,
@@ -85,7 +88,7 @@ class CarScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 10),
-                    RentCarForm(id: id),
+                    // RentCarForm(id: id),
                   ],
                 ));
           } else if (snapshot.hasError) {
