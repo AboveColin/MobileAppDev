@@ -70,7 +70,6 @@ class RentCarFormState extends State<RentCarForm> {
                   key: _formKey,
                   child: Column(
                     children: <Widget>[
-                      Padding(padding: const EdgeInsets.all(80.0)),
                       ElevatedButton(
                         onPressed: () => _selectDateRange(context),
                         child: Text('Select Date Range'),

@@ -69,25 +69,7 @@ class CarScreen extends StatelessWidget {
                     buildDetailRow(
                         Icons.category, 'Type:', '${carData["body"]}'),
                     const SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => DamageReportScreen(carID: id),
-                          ),
-                        );
-                      },
-                      child: const Text('Report Damage'),
-                      style: ElevatedButton.styleFrom(
-                        primary: ThemeConfig.secondaryColor,
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 15, horizontal: 20),
-                        textStyle: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
+
                     // RentCarForm(id: id),
                   ],
                 ));
