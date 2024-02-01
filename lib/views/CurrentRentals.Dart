@@ -64,20 +64,6 @@ class CurrentRentals extends StatelessWidget {
                     const SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: () {
-                        // TODO: _apiService.stopRental()
-                      },
-                      child: const Text('Stop Rental'),
-                      style: ElevatedButton.styleFrom(
-                        primary: ThemeConfig.primaryColor,
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 15, horizontal: 20),
-                        textStyle: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
